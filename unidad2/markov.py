@@ -32,6 +32,8 @@ def vectorEstacionarioAprox(matriz, tolerancia = 0.01):
     while(not cumpleTolerancia):
         vecAux = productoMatricial(matriz,vec)
         cumpleTolerancia = cumpleTolerancia(vec,vecAux,tolerancia)
+        vec = vecAux
+    return vec
 
 def vectorEstacionario(matrizTransicion): 
     mat = [fila.copy() for fila in matrizTransicion]
