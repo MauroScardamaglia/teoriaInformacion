@@ -212,6 +212,8 @@ def ej16():
     print(entropiaMarkoviana(mat3,vectorEstacionario(mat3))) # hagamos laburar al proce xD
 
 
+def main():
+    ej15()
+    ej16()
 
-#ej15()
-ej16()
+main()

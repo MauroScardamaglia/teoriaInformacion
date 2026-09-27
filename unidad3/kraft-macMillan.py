@@ -213,7 +213,7 @@ def devolverPalabra(palabrasCodigo,probabilidades):
     return palabrasCodigo[i]
 
 
-def generarMensaje(n,palabrasCodigo,probabilidades): # que hay qué hacer???
+def generarMensaje(n,palabrasCodigo,probabilidades):
     cad = ""
     for i in range(n):
         cad += devolverPalabra(palabrasCodigo,probabilidades)

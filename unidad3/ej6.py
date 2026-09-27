@@ -134,5 +134,8 @@ def ej8():
         print()
     print()
 
-ej7()
-ej8()
+def main():
+    ej7()
+    ej8()
+    
+main()

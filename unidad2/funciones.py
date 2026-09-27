@@ -42,7 +42,7 @@ def generarProbabilidades():
         total += Probabilidades[i] 
 
     if (total > 1):
-        Probabilidades = [i / total for i in probabilidades]
+        Probabilidades = [i / total for i in Probabilidades]
 
     return Probabilidades
 
@@ -57,32 +57,24 @@ def entropia(probabilidades, informaciones):
         suma += x*y
     return suma
 
-# b) este no funca, no sé porqué
-#def entropia(probabilidades, informaciones):
-#    sum([x * y for x, y in zip(probabilidades, informaciones)])
+def ej1():
+    print("             EJERCICIO 1 \n")
+    probabilidades = [0.25, 0.125, 0.5, 0.125]   
 
-#main trucho
-print("             EJERCICIO 1 \n")
-probabilidades = [0.25, 0.125, 0.5, 0.125]   
+    print(probabilidades)
 
-print(probabilidades)
+    ''' 
+    esto es una tupla, no se puede ni agregar/quitar elementos, ni cambiar sus valores (lista de constantes)
+    probabilidades = (0.25, 0.125, 0.5, 0.125)
+    probabilidades[2] = 1
+    probabilidades.append(2)
+    '''
 
-''' 
-esto es una tupla, no se puede ni agregar/quitar elementos, ni cambiar sus valores (lista de constantes)
-probabilidades = (0.25, 0.125, 0.5, 0.125)
-probabilidades[2] = 1
-probabilidades.append(2)
-'''
+    print("P = ", probabilidades)
+    informaciones = generarListaInformacion(probabilidades)
 
-print("P = ", probabilidades)
-informaciones = generarListaInformacion(probabilidades)
-
-print("I = ", informaciones)
-print("Entropía: \n\n", entropia(probabilidades, informaciones))
-
-
-
-
+    print("I = ", informaciones)
+    print("Entropía: \n\n", entropia(probabilidades, informaciones))
 
 
 #                                                      EJERCICIO 2
@@ -120,35 +112,6 @@ def generarCadena(alfabeto, probabilidades, n):
     return cadena    
 
 
-print("             EJERCICIO 2 \n")
-
-#cadena = "abaacddecdcabcbaa"
-cadena = input("Ingrese cadena que sea la muestra para generar la fuente\n")
-print("Cadena original: ",cadena)
-print("Largo de la cadena: ",len(cadena),"\n")
-
-alfabeto, probabilidades = generarFuente(cadena)
-print("Alfabeto = ", alfabeto)
-print("Probabilidades = ", probabilidades,"\n")
-
-informaciones = generarListaInformacion(probabilidades)
-print("I = ", informaciones)
-print("Entropía: \n\n", entropia(probabilidades, informaciones))
-
-print("Ingrese largo de la cadena aleatoria a generar")
-n = int(input())
-print(f"Cadena aleatoria: \"", generarCadena(alfabeto, probabilidades, n),"\"", sep="")
-
-print("ej3b")
-probabilidades = [1/9, 1/6, 1/9, 1/9, 1/6, 1/3]
-informaciones = generarListaInformacion(probabilidades)
-entr = entropia(probabilidades, informaciones)
-
-print("Probabilidades: ", probabilidades)
-print("Informaciones: ", informaciones)
-print("Entropía", entr)
-
-
 #                                                      EJERCICIO 8
 
 def entropiaBinaria(w): # en realidad es omega, no w, pero bueno
@@ -157,7 +120,70 @@ def entropiaBinaria(w): # en realidad es omega, no w, pero bueno
     print("\nProbs =",probs,"\nInfs= ",infs)
     return entropia(probs, infs) # tmb se podia hacer return w*math.log2(1/w) + (1-w)*math.log2(1/(1-w))
 
-print("\n\n\n\nIngrese probabilidad w")
-w = input()
-w = float(w)
-print("Entropia: ",entropiaBinaria(w),"\n\n")
+    
+def ej1():
+    print("             EJERCICIO 1 \n")
+    probabilidades = [0.25, 0.125, 0.5, 0.125]   
+
+    print(probabilidades)
+
+    ''' 
+    esto es una tupla, no se puede ni agregar/quitar elementos, ni cambiar sus valores (lista de constantes)
+    probabilidades = (0.25, 0.125, 0.5, 0.125)
+    probabilidades[2] = 1
+    probabilidades.append(2)
+    '''
+
+    print("P = ", probabilidades)
+    informaciones = generarListaInformacion(probabilidades)
+
+    print("I = ", informaciones)
+    print("Entropía: \n\n", entropia(probabilidades, informaciones))
+   
+   
+    
+def ej2():
+    print("             EJERCICIO 2 \n")
+
+    #cadena = "abaacddecdcabcbaa"
+    cadena = input("Ingrese cadena que sea la muestra para generar la fuente\n")
+    print("Cadena original: ",cadena)
+    print("Largo de la cadena: ",len(cadena),"\n")
+
+    alfabeto, probabilidades = generarFuente(cadena)
+    print("Alfabeto = ", alfabeto)
+    print("Probabilidades = ", probabilidades,"\n")
+
+    informaciones = generarListaInformacion(probabilidades)
+    print("I = ", informaciones)
+    print("Entropía: \n\n", entropia(probabilidades, informaciones))
+
+    print("Ingrese largo de la cadena aleatoria a generar")
+    n = int(input())
+    print(f"Cadena aleatoria: \"", generarCadena(alfabeto, probabilidades, n),"\"", sep="")
+
+    print("ej3b")
+    probabilidades = [1/9, 1/6, 1/9, 1/9, 1/6, 1/3]
+    informaciones = generarListaInformacion(probabilidades)
+    entr = entropia(probabilidades, informaciones)
+
+    print("Probabilidades: ", probabilidades)
+    print("Informaciones: ", informaciones)
+    print("Entropía", entr)    
+
+
+
+def ej8():
+    print("\n\n\n\nIngrese probabilidad w")
+    w = input()
+    w = float(w)
+    print("Entropia: ",entropiaBinaria(w),"\n\n")
+    
+    
+    
+def main():
+    ej1()
+    ej2()
+    ej8()
+    
+main()
