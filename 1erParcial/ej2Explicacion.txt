@@ -1,0 +1,22 @@
+Explicación Código Ej2:
+
+Para identificar el alfabeto código (X) se recorre la lista con las palabras código (que son strings), y se buscan apariciones de caracteres distintos a los previos y se los guarda en una lista de caracteres (el tamaño de dicha lista es el 'r').
+
+Para calcular la entropía de la fuente se suma r veces cada probabilidad con su información correspondiente (sumatoria de 0 a r-1 de p(Si) * log base r (1/p(Si)) ).
+
+La longitud media del código se calcula sumando q veces (cantidad de palabras código) r^(-li), siendo li la longitud de cada palabra código.
+
+La inecuación de Kraft Mac-Millan se cumple cuando la sumatoria de Kraft de menor o igual que 1. La sumatoria de kraft es igual que la hecha para la longitud media pero multiplicando cada valor por su probabilidad correspondiente (Suma Lineal Ponderada)
+
+Para la clasificación de las propiedades se toma la "última/más superior" clasificación que se cumple.
+Bloque indica que el código tiene un compartamiento determinístico (un símbolo fuente Si siempre produce la misma palabra código).
+No Singular indica que el código tiene una palabra código única por cada símbolo fuente (no se repiten).
+Unívoco/ Unívocamente Decodificable significa que es posible hacer el proceso de Decodificación, por lo que 2 tiras de símbolos fuentes distintas siempre producen tiras de palabras código distintas.
+Instantáneo significa que posible identificar una palabra código de la tira sin conocer el resto de símbolos códigos, es decir las palabras código no comparten prefijos.
+
+Para dictar esta clasificación busco la primera que se cumple desde instantáneo hasta código (en cada verificación el código python examina si se cumplen las anteriores, esto es ineficiente pero es más ordenado).
+El algoritmo para determinar si es un código no singualar examina si hay repeticiones en las palabras código.
+El instantáneo examina si hay prefijos compartidos.
+El Unívoco hace uso del algoritmo de Sardinas Patterson donde en cada iteración se añaden a un nuevo conjunto los sufijos que comparten el conjunto anterior con el primer conjunto (las palabras código). La condición de corte es encontrar un elemento del conjunto actual que se encuentra en las palabra código (esto diría que es no unívoco) o que se repitan 2 conjuntos (esto sería unívoco).
+
+Según los parámetros dado por la catedra un código compacto es el código unívoco donde el largo de cada palabra código es menor o igual al techo de la información de dicha palabra. Esto es lo analizado en dicha función.

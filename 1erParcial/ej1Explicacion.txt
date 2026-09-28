@@ -1,0 +1,23 @@
+Explicacion ej1
+
+
+Se determina el alfabeto fuente buscando apariciones de caracteres distintos en la cadena del mensaje, estos se agregan a una lista que conforma el alfabeto.
+
+Las probabilidades se consiguen contando apariciones de cada símbolo fuente en la cadena, luego diviendo esas cantidades por el total de apariciones para normalizar.
+
+La matriz de transición se obtiene, primero consiguiendo el alfabeto fuente, y luego iterando contando apariciones de un caracter dado el caracter previo, es decir, si aparece un símbolo i luego de uno j, se suma 1 en la matriz en la posición i,j. Luego se normaliza diviendo cada elemento de la matriz por la sumatoria de la correspondiente columna, esto porque desde un elemento j la sumatoria de las probabilidades condicionales a partir de dicho elemento es 1. Se empieza a iterar con j siendo el primer caracter de la cadena, y se termina con i siendo el último caracter de la cadena. Esto porque no hay ni caracter que preceda al primer elemento ni caracter que prosiga al último.
+
+Se estima si la fuente de la que surge la cadena es de memoria nula o no nula, luego de obtener la matriz de transición, evaluando si los elementos de las filas tienden a un mismo número (lo que indicaría que sin importar el elemento j la probabilidad de llegar a i es siempre la misma), lo que daría como resultado una fuente de memoria nula. Este análisis se hace encontrando la diferencia (en valor absoluto) entre todos los mínimos y máximos de cada fila, luego tomando la mayor diferencia y viendo si es menor o no a una tolerancia dada (pongo como parámetro predeterminado 0.001 (10^-3) de tolerancia, aunque esta puede ser cambiada).
+
+La entropía de la fuente se calcula distinto dependiendo del tipo de fuente. Si es de memoria nula se hace el cálculo clásico que suma las multiplicaciones entre la probabilidades del símbolo por su información. Si es de memoria no nula se suma por cada elemento su probabilidad (dictada por el vector estacionario) multiplicada por la sumatoria de sus probabilidades condicionales (las probabilidades a generar el siguiente elemento) multiplicadas por su información correspondiente.
+
+Para generar la extensión de orden n, la función que desarollé genera una nueva fuente con su respectivo alfabeto y probabilidades, donde cada símbolo de dicha fuente nueva tiene n símbolos del alfabeto original.
+El proceso que implementé fue el de utlilizar una variable que contiene la representación del símbolo actual de la fuente de extensión, donde su contenido es una lista de valores en base q (de 0 a q-1) (recordar que q es la cantidad de símbolos del alfabeto original), donde en cada iteración se suma 1 (la iteración usa un carry para determinar como sumar ese 1 en la base q).
+Por cada iteración se añade al alfabeto extendido lo que representa la variable, que es el símbolo extendido, y se añade la probabilidad extendida, que es la multiplicación de las probabilidades de los símbolos que conforman el símbolo extendido actual.
+
+
+Para obtener el vector estacionario se inicializa un vector en n elementos con valor 1/n (un vector de equiprobables), y luego con cada iteración se hace un producto matricial entre la matriz de transición y el vector actual. El ciclo corta cuando la diferencia entre los vectores de 2 pasos cumple con una tolerancia dada. Esto no genera el vector estacionario "real", pero genera uno lo suficientemente cercano, con un algoritmo más sencillo que el necesario para recrear el proceso matemático.
+
+
+
+Dios que manera de escribir, quién mierda va a leer este choclo JAJJAJA.

@@ -214,8 +214,8 @@ def compartenPrefijo(cad1,cad2):
         cad2 = cadAux
     return cad2 == cad1[0:len(cad2)]
 
-def esInstantaneo(palabrasCodigo):
-    aux = esUnivoco(palabrasCodigo) # si el alfabeto código no es univoco entonces no es instantáneo
+def esInstantaneo(palabrasCodigo,mostrarPasosUnivoco = False):
+    aux = esUnivoco(palabrasCodigo,mostrarPasosUnivoco) # si el alfabeto código no es univoco entonces no es instantáneo
     i = 0
     n = len(palabrasCodigo)
     while (aux and i < n):
@@ -237,12 +237,14 @@ def sufijo(cad1,cad2): # devuelve el sufijo, en caso de no compartir prefijo dev
         suf += cad1[len(cad2):] # asigna el sufijo de cad1
     return suf
 
-def esUnivoco(palabrasCodigo):
+def esUnivoco(palabrasCodigo,mostrarPasos = False):
     if (not esNoSingular(palabrasCodigo)):
         return False
     # algoritmo de Sardinas-Patterson
     conjSuf = [] # lista de conjuntos/sets S=[S1, S2, .., Sn] siendo Si={el1,el2,..,eln}
     conjSuf.append(set(palabrasCodigo))
+    if (mostrarPasos):
+        print("S0 = ",conjSuf[0])
     k = 0
     auxBool = True # booleano condición de corte
     while(auxBool): # acá podría haber un while(True) y no haría diferencia
@@ -255,6 +257,9 @@ def esUnivoco(palabrasCodigo):
                 if (suf!=""):
                     conjSuf[k+1].add(suf)
         k += 1
+        if (mostrarPasos):
+            print(f"S{k} = ",conjSuf[k])
+        
         # 2 posibles condiciones de corte
         # a -> Sk == Sj para algun j pert[0-k] -> Univoco -> auxBool = False (cortá)
         # b -> z pert S0, para algún z pert a Sk -> noUnivoco -> auxBool = False (cortá)
@@ -298,6 +303,9 @@ def sumatoriaKraft(palabrasCodigo):
         suma += r ** -long
     return suma
 
+def cumpleKraft(palabrasCodigo):
+    return sumatoriaKraft(palabrasCodigo) <= 1
+
 def obtenerLongitudMedia(palabrasCodigo, probabilidades):
     return sum([prob * len(palabra) for palabra,prob in zip(palabrasCodigo, probabilidades)])
 
@@ -329,8 +337,28 @@ def generarCadenaPalabras(palabrasCodigo,probabilidades,n):
         cad += " "
     return cad
 
+def clasificarCodigo(palabrasCodigo):
+    if (esInstantaneo(palabrasCodigo,True)):
+        print("Instantáneo")
+    elif (esUnivoco(palabrasCodigo)):
+        print("Unívoco/Unívocamente Decodificable")
+    elif(esNoSingular(palabrasCodigo)):
+        print("No Singular")
+    else:
+        print("Código Bloque")
+
+
+'''
+1) Para cada uno de los siguientes mensajes, emitidos por fuentes de información:
+
+a) Determinar el alfabeto y las probabilidades de sus símbolos
+b) Obtener la matriz de transición de la fuente
+c) Estimar si se trata de una fuente de memoria nula o no nula
+d) Calcular la entropía de la fuente
+e) Si es una fuente de memoria nula, generar la extensión de orden 2 y calcular su entropía a partir de sus probabilidades
+f) Si es una fuente con memoria, obtener el vector estacionario 
+'''
 def ej1(msj):
-    msj1 = ";;,;,;:,,,.;,,.,,,::,;;;,:;.,,;:,,,:..;,;;.,;,,.:;"
 
     # a)
     alfabeto, probabilidades = generarFuente(msj)
@@ -361,19 +389,70 @@ def ej1(msj):
 
     
 
-
+'''
+2) Para cada uno de los siguientes códigos:
+a) Identificar el alfabeto código
+b) Calcular la entropía de la fuente y la longitud media del código
+c) Comprobar si la codificación cumple la inecuación de Kraft-McMillan
+d) Clasificarlo de acuerdo a sus propiedades
+e) Determinar si se trata de un código compacto
+f) En caso de haber utilizado el algoritmo de Sardinas-Patterson, informar los resultados obtenidos en cada paso        
+'''
     
-#def ej2():
+def ej2(palabrasCodigo, probabilidades):
+    # a)
+    alfabetoCodigo = generarAlfabetoCodigo(palabrasCodigo)
+    print("Alfabeto Código: ",alfabetoCodigo)
+    
+    # b)
+    entropia = obtenerEntropia(probabilidades, generarListaInformacion(probabilidades,len(alfabetoCodigo)))
+    longitudMedia = obtenerLongitudMedia(palabrasCodigo,probabilidades)
+    print("Entropía: ",entropia)
+    print("Longitud Media: ",longitudMedia)
+    
+    # c)
+    kraft = sumatoriaKraft(palabrasCodigo)
+    print("Kraft: ",kraft)
+    if (kraft <= 1.0):
+        print("Cumple la Inecuación de Kraft-Macmillan")
+    else:
+        print("NO Cumple la Inecuación de Kraft-Macmillan")
+    
+    # d) y f)
+    clasificarCodigo(palabrasCodigo)
+    
+    # e)
+    if (esCompacto(palabrasCodigo,probabilidades)):
+        print("El Código es Compacto")
+    else:
+        print("El Código NO es Compacto")    
+    
+    
+    
+    
+    
+    
 
 
 def main():
     print(" EJERCICIO 1")
+
     print(" MENSAJE 1\n")
     ej1(";;,;,;:,,,.;,,.,,,::,;;;,:;.,,;:,,,:..;,;;.,;,,.:;")
+
     print("\n\n MENSAJE 2\n")
-    ej1("-+-+*//++///*/-////+---////-+/+--+-+/-/+-+/-+*++//")
+    ej1("-+-+*//++///*/-////+---////-+/+--+-+/-/+-+/-+*++//") 
 
 
+
+
+    print("\n\n\n EJERCICIO 2\n")
+
+    print(" CÓDIGO 1\n")
+    ej2(["/+","*","+-","-","*/"],[0.15,0.25,0.05,0.45,0.10])
+
+    print("\n\n CÓDIGO 2\n")
+    ej2(["(]","]","[)",")","(["],[0.15,0.25,0.05,0.45,0.10])
     
     
 main()

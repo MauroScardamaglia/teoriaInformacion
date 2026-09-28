@@ -1,0 +1,14 @@
+Ej 2 Análisis de resultados:
+
+Primer código:
+La longitud media es mayor a la entropía, tiene sentido. La información promedio es de 0.99 bits por símbolo.
+Cumple la inecuación de Kraft-MacMillan, existe un código tanto unívoco como instantáneo con dichas longitudes.
+El código llega a ser solamente No Singular, esto porque "*/+-" se podría interpretar como "*/" "+-", o como "*", "/+" "-"
+El código no es compacto, simplemente porque no es unívoco.
+En cuanto al algoritmo de Sardinas Patterson, al llegar al conjunto 3 se encuentra el elemento "-" que se encuentra en las palabras código, lo que determina que no sea UD.
+
+Segundo código:
+Idem con las longitudes, la entropía y la inecuación de Kraft MacMillan del caso anterior, ya que hay 4 símbolos código, mismas probabilidades y mismas longitudes, respectivamente.
+Este código es instantáneo, es decir se puede decodificar correctamente, y no comparten prefijos las palabras código.
+Es compacto, esto porque es unívoco y se cumple la condición de compacto ya mencionada en el cuadro de texto anterior.
+En cuanto Sardinas-Patterson, se corta el algoritmo al repetirse el conjunto vacío mostrado por consola como set() (es decir, se llegó a un ciclo).

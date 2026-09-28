@@ -1,0 +1,24 @@
+Analisis ej1
+
+
+Mensaje 1:
+
+Ya desde la matriz de transición se ve que la fuente es de memoria nula ya que todas las filas contienen elementos iguales entre sí.
+
+Claramente la fuente es de memoria nula.
+
+La entropía es de 1.84 bits lo que indica que hay una información de 1.84 nats por/símbolo, y que se necesitan en promedio 1.84 símbolos para representar cada elemento.
+
+En la extensión de orden 2 se ven las 16 combinaciones de los símbolos y sus probabilidades.
+
+
+
+Mensaje 2:
+
+En la matriz de transición se ve claramente la propiedad de tener memoria de la fuente ya que hay diferencias drásticas entre elementos de las filas, por ejemplo para llegar a el elemento '-' desde '+' hay probabilidad de 0.35, y desde '*' probabilidad nula.
+
+Fuente de memoria.
+
+La entropía es de 1.62 nats, esta se consigue a partir del vector estacionario.
+
+El vector estacionario muestra una probabilidad similar con los elementos '-' y '+' con ~0.25, luego es muy poco probable el elemento '*' 0.06, y el más probable es '/' con 0.41.
