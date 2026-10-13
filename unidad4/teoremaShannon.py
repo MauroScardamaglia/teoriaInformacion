@@ -8,11 +8,43 @@ de Shannon. '''
 def generarListaInformacion(probabilidades,r):
     return [math.log(1/prob,r) if prob > 0 else 0 for prob in probabilidades]
 
-def obtenerEntropia(probabilidades, informaciones):
+def obtenerEntropia(probabilidades, r):
     suma = 0
+    informaciones = generarListaInformacion(probabilidades,r)
     for x, y in zip(probabilidades, informaciones):
         suma += x*y
     return suma
+
+def generarExtensionProbabilidades(probabilidades,n): # solo para extender probabilidades, sin importar alfabeto
+    probabilidadesExt = []
+    posiciones = [0] * n
+    carry = 0
+    q = len(probabilidades)
+
+    while(carry != 1):
+        prob = 1
+        for pos in posiciones:
+            prob *= probabilidades[pos]
+        
+        probabilidadesExt.append(prob)
+        
+        # avanzar la posición
+        if (posiciones[n-1] + 1 < q):
+            posiciones[n-1] += 1 
+        else:
+            posiciones[n-1] = 0
+            carry = 1
+            i = n - 2 
+            while (carry == 1 and i >= 0):
+                if (posiciones[i] + 1 < q):
+                    posiciones[i] += 1
+                    carry = 0
+                else:
+                    posiciones[i] = 0
+                    carry = 1
+                    i -= 1
+    
+    return probabilidadesExt
 
 def generarExtensionFuente(alfabeto, probabilidades, n):
     alfabetoExtendido = []
@@ -47,7 +79,7 @@ def generarExtensionFuente(alfabeto, probabilidades, n):
                     posiciones[i] = 0
                     carry = 1
                     i -= 1
-            
+
     return alfabetoExtendido, probabilidadesExtendido
 
 def generarAlfabetoCodigo(palabrasCodigo):
@@ -62,41 +94,124 @@ def obtenerLongitudMedia(palabrasCodigo, probabilidades):
     return sum([prob * len(palabra) for palabra,prob in zip(palabrasCodigo, probabilidades)])
 
 # se pasa el código original
-def cumpleShannon(palabrasCodigo, probabilidades, n):
-# Está mal esto, tengo que pasar el código para la extensión
+def cumpleShannon(palabrasCodigo, probabilidades, n,mostrar = False):
+# Las probabilidades que recibo son las de la fuente original, q probabilidades
+#
+# Tengo que pasar el código para la extensión
 # y calcular el código acorde antes de llamar a la función
 # el dolor de huevos está en calcular un código eficiente (que es complejo por su largo)
 #
-'''
-    palabrasCodigoExt, probabilidadesExt = generarExtensionFuente(palabrasCodigo,probabilidades,n)
-    entropia = obtenerEntropia(probabilidades,generarListaInformacion(probabilidades,len(generarAlfabetoCodigo(palabrasCodigo))))
-    longMedia = obtenerLongitudMedia(palabrasCodigoExt, probabilidadesExt)
-    longMedia /= n # longMedia == Ln / n
-    return (longMedia >= entropia ) and (longMedia < (entropia + 1/n) )
-'''
+    alfabetoCodigo = generarAlfabetoCodigo(palabrasCodigo)
+#    q = len(probabilidades)
+#    aux, probabilidadesExt = generarExtensionFuente(["a"]*q,probabilidades,n)
+    probabilidadesExt = generarExtensionProbabilidades(probabilidades,n)
+    entropia = obtenerEntropia(probabilidades, len(alfabetoCodigo))
+
+    longMedia = obtenerLongitudMedia(palabrasCodigo,probabilidadesExt)
+    cotaInf = entropia
+    cotaSup = entropia + 1/n
+
+    print("Hr(S) = ",cotaInf)
+    print("Ln/n = ",longMedia/n)
+    print("Hr(S) + 1/n = ",cotaSup)
+
+    return (cotaInf <= longMedia/n) and (longMedia/n < cotaSup)    
+
     
 def ej1(palabrasCodigo,probabilidades,n):
-'''    codExt, probExt = generarExtensionFuente(palabrasCodigo,probabilidades,n)
-    print("Código: ",palabrasCodigo)
+    alfabetoCodigo = generarAlfabetoCodigo(palabrasCodigo)
+#    q = len(probabilidades)
+#    aux, probabilidadesExt = generarExtensionFuente(["a"]*q,probabilidades,n)
+    probabilidadesExt = generarExtensionProbabilidades(probabilidades,n)
+    print("Alfabeto Código: ",alfabetoCodigo)
     print("Probabilidades: ",probabilidades)
-    print()
-#    print("Código Extendido: ",codExt)
-#    print("Probabilidades Extendidas: ",probExt)
-    print()
-    print("Hr(S) = ",obtenerEntropia(probabilidades,generarListaInformacion(probabilidades,len(generarAlfabetoCodigo(palabrasCodigo)))))
-    print("Ln / n = ",obtenerLongitudMedia(codExt,probExt)/n)
-    print("Hr(S) + 1/n = ",obtenerEntropia(probabilidades,generarListaInformacion(probabilidades,len(generarAlfabetoCodigo(palabrasCodigo)))) + 1/n)
-    print()
-    print("Cumple Shannon?")
-    print(cumpleShannon(palabrasCodigo,probabilidades,n))
-'''
+    print("Probabilidades para la extensión de orden ",n,": ",probabilidadesExt)
+    print("Código para la extensión de orden ",n,": ",palabrasCodigo)
+    print("\nCumple Shannon?\n")
+    if (cumpleShannon(palabrasCodigo,probabilidades,n,True)):
+        print("\nSí")
+    else:
+        print("\nNo")
+
+
+def prueba():
+    prob = [0.5,0.45,0.05]
+    codigo = ["00","10","01100","11","010","01110","01101","011110","011111"]
     
+    ej1(codigo,prob,2)    
+
+
+def ej2():
+        prob = [0.3,0.1,0.4,0.2]
+        cod = ["BA","CAB","A","CBA"]
+        ej1(cod,prob,1)
+
+        print()
+        print()
+        print()
+        
+        codExt, probExt = generarExtensionFuente(cod,prob,2)
+        ej1(codExt,prob,2)
+    
+def ej3():
+    prob = [0.5,0.2,0.3]
+    c1 = ["11","010","00"]
+    c2 = ["10","001","110","010","0000","0001","111","0110","0111"]
+
+    ej1(c1,prob,1)
+    print("\n\n")
+    ej1(c2,prob,2)
+
+def ej4():
+    c3 = ["0","100","101","11100","110","11101","11110","11111"]
+    probs = [0.8,0.2]
+
+    ej1(c3,probs,3)
+    
+def ej5():
+    probs = [0.7,0.3]
+    huff1 = ["0","1"]
+    shannonFano2 = ["0","10","110","111"]
+    ej1(huff1,probs,1)
+    print("\n\n")
+    ej1(shannonFano2,probs,2)
+    
+
+''' 6. Realizar una función en Python que reciba como parámetros: dos listas paralelas con la
+    distribución de probabilidades de una fuente y su codificación, y calcule el rendimiento y la
+    redundancia del código. '''
+
+def obtenerRendimientoCodigo(codigo,probabilidades): # retorna rendimiento, redundancia (η, R)
+    alfabetoCodigo = generarAlfabetoCodigo(codigo)
+    r = len(alfabetoCodigo)
+    entropia = obtenerEntropia(probabilidades, r)
+    longMedia = obtenerLongitudMedia(codigo,probabilidades)
+    return entropia / longMedia , 1 - (entropia / longMedia)
+
+def ej7():
+    c1 = ["11","010","00"]
+    probs = [0.5,0.2,0.3]
+    
+    c2 = ["10","001","110","010","0000","0001","111","0110","0111"]
+    probsExtOrd2 = generarExtensionProbabilidades(probs,2)
+
+    η1, R1 = obtenerRendimientoCodigo(c1,probs)
+    η2, R2 = obtenerRendimientoCodigo(c2,probsExtOrd2)
+    
+    print("Rendimiento η1 = ",η1)
+    print("Redundancia R1 = ",R1)
+    print("Rendimiento η2 = ",η2)
+    print("Redundancia R2 = ",R2)
+                
+
 def main():
-    cod1 = ['00','01','10','11']
-    prob1 = [0.25,0.25,0.25,0.25]
+#    prueba()
+#    ej2()
+#    ej3()
+#    ej4()
+#    ej5()
+    ej7()
 
-    prob2 = [0.025,0.025,0.9,0.05]
-    ej1(cod1,prob2,10)
-
-
+print()
+print()
 main()
