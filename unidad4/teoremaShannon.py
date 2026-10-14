@@ -260,11 +260,14 @@ def ej10():
     b. Dado un byte que se obtuvo como resultado de la función anterior, verificar si es
     correcto o tiene errores. '''
 
-def verificarParidad(msj):
-    return msj[0:len(msj)-1].count('1') == int(msj[len(msj)-1])
+def verificarParidad(msj,mostrar = False):
+    if (mostrar): print(msj[0:-1].count('1') % 2)
+    if (mostrar): print(int(msj[len(msj)-1]))
+    return (msj[0:-1].count('1') % 2) == int(msj[-1])
 
 
 def darRedundanciaMensaje(c,mostrar = False):
+    if (mostrar): print("'",c,"'")
     cad = ord(c)
     if (mostrar): print(cad)
 
@@ -279,8 +282,38 @@ def darRedundanciaMensaje(c,mostrar = False):
 
 def ej12():
     mensajeConRedundancia = darRedundanciaMensaje('C',True)
-    print(mensajeConRedundancia)
-    print(verificarParidad(mensajeConRedundancia))
+    print(verificarParidad(mensajeConRedundancia),end="\n\n")
+
+    mensajeConRedundancia = darRedundanciaMensaje('0',True)
+    print(verificarParidad(mensajeConRedundancia),end="\n\n")
+
+    mensajeConRedundancia = darRedundanciaMensaje('a',True)
+    print(verificarParidad(mensajeConRedundancia),end="\n\n")
+
+def imprimirMensajRedund(mensaje):
+    for x in mensaje[0][:-1]:
+        print(x,end="\t")
+    print("| ",mensaje[0][-1])
+
+    for x in mensaje[0]:
+        print("--------",end="")
+    print()
+
+    for x in mensaje[1:]:
+        for y in x[:-1]:
+            print(y,end="\t")
+        print("| ",x[-1])
+
+
+''' 13. Dadas las siguientes matrices que contienen mensajes representados con código ASCII y
+    sus bits de paridad vertical, longitudinal y cruzada, detectar los errores y, en caso de ser
+    posible, recuperar el mensaje original: '''
+
+def ():
+
+
+def ej13():
+    print("a")
 
 
 def main():
@@ -292,7 +325,10 @@ def main():
 #    ej7()
 #    ej9()
 #    ej10()
-    ej12()
+#    ej12()
+#    mat = [[0]*5]*5
+#    print(mat)
+    imprimirMensajRedund([[0]*5]*5)
 
 print()
 main()
