@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primer Parcial 2026: Revisión del intento | FI - UNMdP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      
+      --bg: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #94a3b8;
+      
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --primary-dark: #1d4ed8;
+      
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --success-border: #a7f3d0;
+      --success-text: #065f46;
+
+      --badge-bg: #dbeafe;
+      --badge-text: #1e40af;
+
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #090d16;
+      --bg-card: #111827;
+      --bg-card-subtle: #1e293b;
+      --border: #243046;
+      --border-focus: #60a5fa;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-soft: #64748b;
+      
+      --primary: #3b82f6;
+      --primary-light: #172554;
+      --primary-dark: #60a5fa;
+      
+      --success: #10b981;
+      --success-light: #064e3b;
+      --success-border: #047857;
+      --success-text: #a7f3d0;
+
+      --badge-bg: #1e3a8a;
+      --badge-text: #bfdbfe;
+
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header Nav */
+    header.top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    [data-theme="dark"] header.top-nav {
+      background: rgba(17, 24, 39, 0.85);
+    }
+
+    .nav-container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-subtle);
+      border-color: var(--border-focus);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: #ffffff;
+    }
+
+    /* Main Container */
+    main.main-content {
+      max-width: 1060px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Hero / Status Banner */
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #10b981, #059669, #3b82f6);
+    }
+
+    .hero-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .exam-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 0.35rem;
+    }
+
+    .hero-student {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .score-badge-huge {
+      background: var(--success-light);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      padding: 0.85rem 1.4rem;
+      border-radius: var(--radius);
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .score-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+      font-feature-settings: "tnum";
+      color: var(--success);
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .meta-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Section Navigator Bar */
+    .quick-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+
+    .nav-pill {
+      padding: 0.55rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-pill:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .pill-score {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.45rem;
+      background: var(--success-light);
+      color: var(--success);
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s ease;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-number {
+      background: var(--primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+
+    .badge-neutral {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* Subsections / Question Blocks */
+    .sub-section {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .sub-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .enunciado-box {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .enunciado-box ol {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .enunciado-box li {
+      margin-bottom: 0.35rem;
+    }
+
+    .code-chip {
+      font-family: var(--font-mono);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      display: inline-block;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin: 0.35rem 0;
+      word-break: break-all;
+    }
+
+    /* Math Tables & Grids */
+    .matrix-table {
+      width: 100%;
+      max-width: 450px;
+      margin: 0.75rem 0 1.25rem 0;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .matrix-table th, .matrix-table td {
+      padding: 0.55rem 0.75rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .matrix-table th {
+      background: var(--bg-card-subtle);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .matrix-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .matrix-table td:last-child, .matrix-table th:last-child {
+      border-right: none;
+    }
+
+    .matrix-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.9rem;
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .data-label {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .data-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      background: var(--bg-card);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      background-color: var(--success-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Essay / Explanation responses */
+    .essay-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-family: var(--font-sans);
+      margin-top: 0.75rem;
+      color: var(--text);
+    }
+
+    .teacher-feedback {
+      margin-top: 1rem;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(59, 130, 246, 0.08));
+      border: 1px solid var(--success-border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+
+    .teacher-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--success);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      flex: 1;
+    }
+
+    .teacher-text strong {
+      display: block;
+      color: var(--text);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Code block viewer */
+    .code-accordion {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 0.85rem;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .code-accordion summary {
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-card-subtle);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      list-style: none;
+    }
+
+    .code-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .code-accordion summary:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .code-wrapper {
+      position: relative;
+    }
+
+    .code-pre {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      padding: 1.25rem;
+      overflow-x: auto;
+      background: #0f172a;
+      color: #e2e8f0;
+      margin: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-copy {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s ease;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Checkmark Icon SVG inline */
+    .icon-check {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
+      stroke: currentColor;
+      fill: none;
+      vertical-align: -2px;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      header.top-nav, .nav-actions, .quick-nav, .btn-copy, .site-footer {
+        display: none !important;
+      }
+      .card, .hero-card, .sub-section, .matrix-table, .essay-box {
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        background: #ffffff !important;
+      }
+      .code-pre {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+      .score-badge-huge {
+        background: #f0fdf4 !important;
+        border: 1px solid #86efac !important;
+        color: #15803d !important;
+      }
+      .card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Nav -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">TIC</div>
+        <div>
+          <div class="brand-title">Teorías de la Información y la Comunicación</div>
+          <div class="brand-sub">Facultad de Ingeniería • UNMdP (Plan 2024 / 2010)</div>
+        </div>
+      </a>
+      <div class="nav-actions">
+        <button class="btn" id="theme-toggle" aria-label="Cambiar tema">
+          <span id="theme-icon">🌙</span> <span id="theme-text">Oscuro</span>
+        </button>
+        <button class="btn btn-primary" onclick="window.print()" title="Imprimir o Guardar como PDF">
+          🖨️ Imprimir / PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Hero / Status Banner -->
+    <section class="hero-card" id="resumen">
+      <div class="hero-header">
+        <div>
+          <span class="exam-badge">Evaluación Oficial • Revisión del Intento</span>
+          <h1 class="hero-title">Primer Parcial 2026</h1>
+          <div class="hero-student">
+            <span>👤 Estudiante: <strong>MAURO GABRIEL SCARDAMAGLIA GALBUSERA</strong></span>
+          </div>
+        </div>
+        <div class="score-badge-huge">
+          <div class="score-number">100,00</div>
+          <div class="score-label">sobre 100,00 (100%)</div>
+        </div>
+      </div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Estado</span>
+          <span class="meta-val" style="color: var(--success); font-weight: 600;">✓ Finalizado</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Comenzado</span>
+          <span class="meta-val">Martes, 29 de septiembre de 2026, 17:27</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Completado</span>
+          <span class="meta-val">Martes, 29 de septiembre de 2026, 19:22</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Duración</span>
+          <span class="meta-val">1 hora 55 minutos</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Pills -->
+    <div class="quick-nav">
+      <a href="#ejercicio-1" class="nav-pill">
+        <span>Ejercicio 1: Fuente con Memoria</span>
+        <span class="pill-score">50/50 pts</span>
+      </a>
+      <a href="#ejercicio-2" class="nav-pill">
+        <span>Ejercicio 2: Codificación y Kraft</span>
+        <span class="pill-score">50/50 pts</span>
+      </a>
+    </div>
+
+    <!-- EJERCICIO 1 -->
+    <article class="card" id="ejercicio-1">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-number">1</div>
+          <h2 class="card-title">Ejercicio 1: Análisis de Fuente con Memoria y Extensión</h2>
+        </div>
+        <span class="badge-status badge-success">✓ 50,00 / 50,00 pts</span>
+      </div>
+
+      <!-- Enunciado -->
+      <div class="enunciado-box">
+        <strong>Enunciado:</strong> Dado el siguiente mensaje emitido por una fuente de información:
+        <div>
+          <span class="code-chip">CCAABBCCAABBCCAABBCCAABBCCAABB</span>
+        </div>
+        <ol type="a">
+          <li>Obtener la matriz de transición de la fuente.</li>
+          <li>Determinar si se trata de una fuente de memoria nula o con memoria.</li>
+          <li>Generar la extensión de orden 2 a partir de su distribución estacionaria.</li>
+          <li>Calcular la entropía de la fuente y de la extensión obtenida.</li>
+        </ol>
+      </div>
+
+      <!-- Pregunta 1: Respuestas numéricas -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 1 • Resultados Numéricos</span>
+          <span class="badge-status badge-success">10,00 / 10,00 pts</span>
+        </div>
+
+        <p style="font-size: 0.88rem; font-weight: 600; margin-top: 0.5rem;">Matriz de transición:</p>
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>A</th>
+              <td><span class="matrix-val">0.5000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.0000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.5000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+            </tr>
+            <tr>
+              <th>B</th>
+              <td><span class="matrix-val">0.5000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.5556 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.0000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+            </tr>
+            <tr>
+              <th>C</th>
+              <td><span class="matrix-val">0.0000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.4444 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+              <td><span class="matrix-val">0.5000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="data-row">
+          <span class="data-label">Tipo de Memoria:</span>
+          <span class="data-val">Fuente con memoria <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        </div>
+
+        <div style="margin-top: 0.85rem;">
+          <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Vector Estacionario:</p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div class="data-val">A = 0.3200 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="data-val">B = 0.3600 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="data-val">C = 0.3200 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 0.85rem;">
+          <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Extensión de Orden 2 (Probabilidades):</p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div class="data-val">P(AC) = 0.1024 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="data-val">P(BB) = 0.1296 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="data-val">P(CB) = 0.1152 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 0.85rem;">
+          <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Entropías:</p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div class="data-val">H₂(S) = 0.9968 bit/símbolo <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="data-val">H₂(S²) = 3.1654 bit/símbolo <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pregunta 2: Código ej1.py -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 2 • Código Python Entregado</span>
+          <span class="badge-status badge-neutral">Archivo: ej1.py</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Entrega de archivo Python (*.py) con las funciones y resolución:</p>
+        
+        <details class="code-accordion">
+          <summary>
+            <span>📄 Ver código fuente (ej1.py)</span>
+            <span style="font-size: 0.75rem; opacity: 0.7;">Click para expandir / colapsar</span>
+          </summary>
+          <div class="code-wrapper">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar</button>
+            <pre class="code-pre"><code>from math import log
+from mis_funciones import extender_dist_prob
+
+TOLERANCIA_FLOAT = 1e-9
+
+def calcular_entropia_fuente(probabilidades, base=2):
+    entropia = 0
+    if type(probabilidades) == dict:
+        for item in probabilidades:
+            p = probabilidades[item]
+            if p > 0:
+                entropia += p * calcular_cantidad_informacion(p, base)
+    else:
+        for i in range(len(probabilidades)):
+            p = probabilidades[i]
+            if p > 0:
+                entropia += p * calcular_cantidad_informacion(p, base)
+    return entropia
+
+def calcular_cantidad_informacion(prob, base=2):
+    if prob <= 0 or abs(prob - 1.0) < TOLERANCIA_FLOAT:
+        return 0
+    return log(1 / prob, base)
+
+def long_media_codigo(palabras_codigo, probabilidades):
+    longitud = 0.0
+    longitudes = longitudes_palabras(palabras_codigo)
+    for i in range(len(longitudes)):
+        longitud += probabilidades[i] * longitudes[i]
+    return longitud
+
+def longitudes_palabras(palabras_codigo):
+    longitudes = []
+    for palabra in palabras_codigo:
+        longitudes.append(len(palabra))
+    return longitudes
+
+def cumple_shannon(dist_prob, extension, orden):
+    dist_prob_extension = extender_dist_prob(dist_prob, orden)
+    entropia_fuente = calcular_entropia_fuente(dist_prob)
+    long_media = long_media_codigo(extension, dist_prob_extension)
+
+    return (entropia_fuente <= long_media / orden) and (
+        long_media / orden < entropia_fuente + 1 / orden
+    )</code></pre>
+          </div>
+        </details>
+      </div>
+
+      <!-- Pregunta 3: Justificación Teórica -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 3 • Explicación y Justificación Teórica</span>
+          <span class="badge-status badge-success">40,00 / 40,00 pts</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Explicar brevemente la resolución del ejercicio, justificando cada paso, y analizar los resultados obtenidos:</p>
+        
+        <div class="essay-box">Para menciones posteriores:
+q -&gt; cantidad de símbolos del alfabeto fuente
+r -&gt; cantidad de símbolos del alfabeto código
+
+a)
+Para obtener la Matriz de Transición genero una fuente desde una cadena de información, asumiendo que es de memoria no nula. Este proceso lo hago primero obteniendo el alfabeto encontrando símbolos nuevos en la cadena, y luego en otra pasada sumando apariciones de un elemento i dado uno j previo en la matriz respectiva, (por ejemplo si tengo el par "AC" sumo uno a la casilla [C][A]), luego normalizo diviendo todos los elementos por la suma de su columna. 
+Ya desde la matriz de transición se ve claramente que la fuente es de memoria no nula ya que hay diferencias drásticas en las filas, ejemplo: C dado C tiene 0.5000 de probabilidad y C dado A tiene 0.0000, es decir la probabilidad de llegar a C desde C es mucho mayor que desde A (hay memoria).
+
+b)
+Para comprobar que la fuente es de memoria no nula la paso por una función que analiza la matriz de transición, con una tolerancia pasada por parámetro de 0.001 (una tolerancia razonable), buscando entre los absolutos de la mayor diferencia de los elementos de las fila, el máximo de estos, si este máximo es menor a la tolerancia mencionada entonces la fuente es de memoria nula, caso contrario hay propiedad de memoria. El análisis del resultado está escrito en el inciso anterior.
+
+c)
+Para obtener la entropía de la fuente (ya que es de memoria no nula), primero hay que obtener el vector estacionario. Para esto utilicé un proceso sencillo que itera hasta encontrar un vector suficientemente bueno dado una tolerancia, la tolerancia que utilizo es de 0.0001 para hallar una lista de valores bastante razonable. Este proceso parte de un vector equiprobable de n elementos con probabilidad 1/n, y lo que va iterando es un producto matricial entre la matriz de transición y dicho vector actual, esto es porque la propiedad del vector estacionario es no modificar la matriz de transición.
+
+Luego para generar la fuente de extensión de orden 2, la función que desarollé usa una variable "posición" que representa el elemento extendido de la iteración actual con una lista de valores de base q, que llegan a representar todas las q ^ (n) combinaciones posibles de la extensión, en cada iteración se consigue el símbolo extendido con los valores representados por "posición" y se consigue la probabilidad extendida con la multiplicación de probabilidades correspondientes.
+
+El vector estacionario representa las probabilidades de los símbolos, al analizar un mensaje generado por dicha fuente con memoria luego de un lapso de tiempo lo suficientemente grande, entonces al tomar estas probabilidades estacionarias podemos generar la extensión, como si la fuente original fuera de memoria nula.
+
+d)
+Para calcular las entropías, tengo 2 funciones distintas, en el caso de las fuentes sin memoria una que itera sumando la multiplicación entre la probabilidad de un elemento y su información (el logaritmo del inverso de la probabilidad). Para las fuentes con memoria (markovianas) sumo las multiplicaciones entre la probabilidad de un elemento dada por el vector estacionario, y la sumatoria de probabilidades condicionales que surgen de dicho elemento y sus correspondientes informaciones. Utilizo como base de los logaritmos 2, asumiendo que su codificación es binaria, pero si no fuera el caso es pertinente cambiar el r dada la codificación para obtener valores acordes. 
+
+En cuanto al análisis de los valores obtenidos, lo primero que salta a la atención es el hecho de que la entropía de la fuente extendida no es el doble que la de la fuente original, esto es debido a que la fuente original es de memoria, de hecho confirmé el caso que fuera de memoria nula con un print comentado, y efectivamente da la mitad que la entropía de la fuente extendida. Las entropías, respectivamente son de 0.9968 bits y 3.1654 bits, si la fuente original fuera de memoria nula su entropía sería aproximadamente de 1.58 bits, se observa que sería una entropía más alta que la de la fuente actual, esto es debido a que la entropía mide, entre otras cosas la incertidumbre del símbolo promedio, y al ser la fuente de memoria hay menos incertidumbre.</div>
+
+        <div class="teacher-feedback">
+          <div class="teacher-avatar">DOC</div>
+          <div class="teacher-text">
+            <strong>Devolución del Docente</strong>
+            <span>bien</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- EJERCICIO 2 -->
+    <article class="card" id="ejercicio-2">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-number">2</div>
+          <h2 class="card-title">Ejercicio 2: Codificación, Kraft-McMillan y Códigos Compactos</h2>
+        </div>
+        <span class="badge-status badge-success">✓ 50,00 / 50,00 pts</span>
+      </div>
+
+      <!-- Enunciado -->
+      <div class="enunciado-box">
+        <strong>Enunciado:</strong> Dados la distribución de probabilidades de una fuente y el siguiente código:
+        <div style="margin: 0.5rem 0;">
+          <div>Probabilidades: <span class="code-chip">P = { 1/9, 1/3, 1/9, 1/3, 1/9 }</span></div>
+          <div>Código: <span class="code-chip">C = { AB, B, CA, C, BC }</span></div>
+        </div>
+        <ol type="a">
+          <li>Comprobar si cumple la inecuación de Kraft-McMillan.</li>
+          <li>Calcular la entropía de la fuente y la longitud media del código.</li>
+          <li>Determinar si se trata de un código compacto.</li>
+          <li>Proponer otro código compacto con el mismo alfabeto para la fuente.</li>
+        </ol>
+      </div>
+
+      <!-- Pregunta 4: Resultados numéricos -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 4 • Resultados Numéricos</span>
+          <span class="badge-status badge-success">10,00 / 10,00 pts</span>
+        </div>
+
+        <div class="data-row">
+          <span class="data-label">Inecuación de Kraft-McMillan (Σ r<sup>-l<sub>i</sub></sup>):</span>
+          <span class="data-val">1.0000 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        </div>
+
+        <div class="data-row">
+          <span class="data-label">Entropía de la fuente (H<sub>r</sub>(S)):</span>
+          <span class="data-val">1.3333 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        </div>
+
+        <div class="data-row">
+          <span class="data-label">Longitud Media del Código (L):</span>
+          <span class="data-val">1.3333 <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        </div>
+
+        <div class="data-row">
+          <span class="data-label">¿Es compacto?:</span>
+          <span class="data-val">NO es compacto <svg class="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        </div>
+      </div>
+
+      <!-- Pregunta 5: Código ej2.py -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 5 • Código Python Entregado</span>
+          <span class="badge-status badge-neutral">Archivo: ej2.py</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Entrega de archivo Python (*.py) con las funciones y resolución:</p>
+        
+        <details class="code-accordion">
+          <summary>
+            <span>📄 Ver código fuente (ej2.py)</span>
+            <span style="font-size: 0.75rem; opacity: 0.7;">Click para expandir / colapsar</span>
+          </summary>
+          <div class="code-wrapper">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar</button>
+            <pre class="code-pre"><code>from math import log
+from mis_funciones import extender_dist_prob
+
+TOLERANCIA_FLOAT = 1e-9
+
+def calcular_entropia_fuente(probabilidades, base=2):
+    entropia = 0
+    if type(probabilidades) == dict:
+        for item in probabilidades:
+            p = probabilidades[item]
+            if p > 0:
+                entropia += p * calcular_cantidad_informacion(p, base)
+    else:
+        for i in range(len(probabilidades)):
+            p = probabilidades[i]
+            if p > 0:
+                entropia += p * calcular_cantidad_informacion(p, base)
+    return entropia
+
+def calcular_cantidad_informacion(prob, base=2):
+    if prob <= 0 or abs(prob - 1.0) < TOLERANCIA_FLOAT:
+        return 0
+    return log(1 / prob, base)
+
+def long_media_codigo(palabras_codigo, probabilidades):
+    longitud = 0.0
+    longitudes = longitudes_palabras(palabras_codigo)
+    for i in range(len(longitudes)):
+        longitud += probabilidades[i] * longitudes[i]
+    return longitud
+
+def longitudes_palabras(palabras_codigo):
+    longitudes = []
+    for palabra in palabras_codigo:
+        longitudes.append(len(palabra))
+    return longitudes
+
+def extender_alfabeto(alfabeto, n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return alfabeto
+    else:
+        alfabeto_anterior = extender_alfabeto(alfabeto, n - 1)
+        alfabeto_extend = []
+        for i in range(len(alfabeto_anterior)):
+            for j in range(len(alfabeto)):
+                alfabeto_extend.append(alfabeto_anterior[i] + alfabeto[j])
+        return alfabeto_extend</code></pre>
+          </div>
+        </details>
+
+        <div class="teacher-feedback" style="margin-top: 0.85rem;">
+          <div class="teacher-avatar">DOC</div>
+          <div class="teacher-text">
+            <strong>Devolución del Docente</strong>
+            <span>OK códigos parte 1 y parte 2 del cuestionario</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pregunta 6: Justificación Teórica -->
+      <div class="sub-section">
+        <div class="sub-title">
+          <span>Pregunta 6 • Explicación y Justificación Teórica</span>
+          <span class="badge-status badge-success">40,00 / 40,00 pts</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Explicar brevemente la resolución del ejercicio, justificando cada paso, y analizar los resultados obtenidos:</p>
+        
+        <div class="essay-box">r -&gt; Cantidad de símbolos del alfabeto código
+li -&gt; longitud del elemento
+L -&gt; Longitud media del código
+
+a)
+Para obtener el valor de la sumatoria kraft (así denomino al valor a analizar), se suma de todos los elementos la potencia inversa, con base r y exponente li, es decir sum(r ^ (-li)). Luego si esta sumatoria es menor o igual a 1, esto indica que existe un código tanto unívoco como instantáneo con dichas longitudes, claro que para analizar estas propiedades hay que verificar el código en partícular.
+
+b)
+Para obtener la entropía el proceso es el de fuentes de memoria nula, pero la distinción del ejercicio previo es que para calcular las informaciones, la base del logaritmo a usar es r, porque los códigos tienen r símbolos distintos. Para obtener la longitud media se suman las multiplicaciones entre la longitud y la probabilidad de cada palabra código.
+Luego, si la fuente es unívoca la longitud media cumple siempre ser mayor o igual a la entropía, y si fueran iguales estaríamos ante un código compacto perfecto.
+
+c)
+Para determinar si el código es compacto primero hay que verificar si el código es unívoco, luego hay que verificar que todas las palabras código cumplan que su longitud sea menor o igual al techo de su información, lo cual es lógico porque la información representa la cantidad mínima de dígitos a usar para representar dicho elemento eficientemente.
+
+Aunque el código dado pueda pasar como compacto perfecto ya que cumple la segunda condición, no es unívoco, por lo que se descarta como compacto al ser no singular. Esto se ve con la combinación "CAB" que puede ser "CA" + "B", o "C" + "AB".
+
+d)
+El código que propongo es ["CA","A","CB","B","CC"], que tiene palabras código de un símbolo para las probabilidades 1/3, y palabras código de 2 símbolos para las probabilidades 1/9, y dado que es unívoco este código es compacto, y de hecho compacto perfecto ya que su longitud media es igual a la entropía (encajan las informaciones con las longitudes).</div>
+
+        <div class="teacher-feedback">
+          <div class="teacher-avatar">DOC</div>
+          <div class="teacher-text">
+            <strong>Devolución del Docente</strong>
+            <span>Correcto el análisis</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Facultad de Ingeniería • Universidad Nacional de Mar del Plata</p>
+    <p style="margin-top: 0.35rem; opacity: 0.75;">Revisión generada para archivo y estudio personal • Primer Parcial 2026 (Calificación: 100/100)</p>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      if (theme === 'dark') {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Claro';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Oscuro';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Copy code button helper
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = '¡Copiado!';
+        btn.style.background = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
