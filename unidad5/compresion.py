@@ -193,6 +193,23 @@ def ej5():
     print(f"Rendimiento = {rend:.4f}")
     print(f"Redundancia = {redun:.4f}")
     
+    
+    
+''' 7. Implementar funciones en Python que reciban como parámetros: una cadena de
+    caracteres que contenga un alfabeto fuente y una lista de cadenas de caracteres que
+    almacena una codificación en el alfabeto binario, y resuelvan lo siguiente:
+    a. Dada una cadena de caracteres con un mensaje escrito en el alfabeto fuente,
+    devolver una secuencia de bytes (bytearray) que contenga el mensaje codificado.
+    b. Dada una secuencia de bytes, decodificar y retornar el mensaje original.
+    Sugerencia: manipular el mensaje codificado como una cadena de caracteres de unos y
+    ceros, tanto para codificar como para decodificar, y realizar las conversiones entre binarios
+    y enteros con las funciones de casteo correspondientes. '''    
+    
+def asda():
+    return 5
+    
+    
+    
 
 ''' 11. Realizar una función en Python que reciba como parámetro una cadena de caracteres con
     un mensaje y devuelva una secuencia de bytes (bytearray) que contenga el mensaje
