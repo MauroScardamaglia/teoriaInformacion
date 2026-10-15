@@ -1,5 +1,6 @@
 #halloooooo Leute
 import math
+import tp5_ej9
 
 def obtenerEntropia(probabilidades, r):
     suma = 0
@@ -205,11 +206,63 @@ def ej5():
     ceros, tanto para codificar como para decodificar, y realizar las conversiones entre binarios
     y enteros con las funciones de casteo correspondientes. '''    
     
-def asda():
-    return 5
+def codificar(alfabeto,codigo,mensaje): # mensaje fuente ("ABwOz")
+    msjCodificado = ""
+    palabraFuente = "" # ¿Es correcto conceptualmente "palabraFuente"?
+
+    for c in mensaje:
+        palabraFuente += c
+        if (palabraFuente in alfabeto):
+            i = alfabeto.index(palabraFuente)
+            msjCodificado += codigo[i]
+            palabraFuente = ""        
+
+    return msjCodificado
+
+def decodificar(alfabeto,codigo,mensaje): # mensaje codificado ("1010100")
+    msjDecodificado = ""
+    palabraCodigo = ""
+
+    for b in mensaje: # b de bit
+        palabraCodigo += b
+        if (palabraCodigo in codigo):
+            i = codigo.index(palabraCodigo)
+            msjDecodificado += alfabeto[i]
+            palabraCodigo = ""
+
+    return msjDecodificado
     
+''' 8. Codificar una función en Python que reciba como parámetros: una cadena de caracteres
+    con un mensaje y una secuencia de bytes (bytearray) con ese mensaje codificado y calcule
+    la tasa de compresión.
+'''
+def obtenerTasaCompresion(original,comprimido):
+    largoOg = len(original)
+    largoComp = len(comprimido)
+    proporcion = round(largoOg / largoComp)
+    return str(proporcion) + ":1"
+
+''' 9. Dada la siguiente tabla de probabilidades:
+
+    Utilizando las funciones desarrolladas en los ejercicios 3 y 7, comprimir un mensaje
+    mediante el algoritmo de Huffman y/o Shannon-Fano y almacenarlo en un archivo binario.
+    Enviar el archivo a un compañero, quien tendrá que extraer y descomprimir el mensaje.
+    Ambos deben calcular la tasa de compresión, el rendimiento y la redundancia. '''
+
+def ej9():
+    ej9Compresion()
+#    ej9Decompresion()
+
+def ej9Compresion():
+    print("Comprimir o no hacerlo, esa es la cuestión")
+#    tp5_ej9.alfabeto
+    alfabeto = tp5_ej9.alfabeto
+    probs = tp5_ej9.probs
+
     
-    
+
+def ej9Decompresion():
+    print("Decomprimir o no hacerlo, esa es la cuestión")
 
 ''' 11. Realizar una función en Python que reciba como parámetro una cadena de caracteres con
     un mensaje y devuelva una secuencia de bytes (bytearray) que contenga el mensaje
@@ -236,12 +289,6 @@ def comprimirRLC(mensaje): # recibe mensaje tipo string, devuelve string formato
     
 ''' 12. Volver a comprimir los mensajes del ejercicio 10 (utilizando la función desarrollada) y
     calcular la tasa de compresión de cada uno. '''
-
-def obtenerTasaCompresion(original,comprimido):
-    largoOg = len(original)
-    largoComp = len(comprimido)
-    proporcion = round(largoOg / largoComp)
-    return str(proporcion) + ":1"
     
 def ej12():
     msjA = "XXXYZZZZ"
@@ -264,7 +311,8 @@ def main():
 #    pruebaHuffmanYShannon()
 #    ej4()
 #    ej5()
-    ej12()
+    ej9()
+#    ej12()
     
 print()
 main()
