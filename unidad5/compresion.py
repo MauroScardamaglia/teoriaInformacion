@@ -2,6 +2,12 @@
 import math
 import tp5_ej9
 
+from pathlib import Path # esto no creo que lo necesite usar para el parcial, dudo que nos pidan usar archivos binarios
+RUTA = Path(__file__).parent / "archivo.bin"
+
+# MEPA QUE TENGO QUE USAR BYTEARRAY; CAMBIARLO EN TODOS LADOS DONDE HAYA (DE)CODIFICADO: HUFFMAN; SHANNON; ETC...
+# PREGUNTAS/DUDAS ANOTADAS EN LA CARPETA PARA CONSULTA PRÓX CLASE: 20/10
+
 def obtenerEntropia(probabilidades, r):
     suma = 0
     informaciones = generarListaInformacion(probabilidades,r)
@@ -246,23 +252,70 @@ def obtenerTasaCompresion(original,comprimido):
 
     Utilizando las funciones desarrolladas en los ejercicios 3 y 7, comprimir un mensaje
     mediante el algoritmo de Huffman y/o Shannon-Fano y almacenarlo en un archivo binario.
+    
     Enviar el archivo a un compañero, quien tendrá que extraer y descomprimir el mensaje.
+    
     Ambos deben calcular la tasa de compresión, el rendimiento y la redundancia. '''
 
 def ej9():
-    ej9Compresion()
-#    ej9Decompresion()
+ #  ej9Compresion()
+    ej9Decompresion()
+
+
+# MANEJO DE ARCHIVOS BINARIOS
+# archivo = open("archivo.bin","wb")
+# with open("archivo.bin","wb") as archivo:
+# la segunda opción es mejor práctica porque si ocurre una excepción cierra el archivo igual
+
+# MANEJO DE BYTES
+# 
+
 
 def ej9Compresion():
-    print("Comprimir o no hacerlo, esa es la cuestión")
-#    tp5_ej9.alfabeto
+    print("Comprimir o no hacerlo, esa es la cuestión\n")
     alfabeto = tp5_ej9.alfabeto
     probs = tp5_ej9.probs
-
+    codigo = generarCodigoHuffman(probs)
     
+#    mensaje = "\"Hallo, this es mein message für the mundo (: \""
+    mensaje = "COÑO, LUO TIO, QUE MIEDO; UNO NO SE RESGUARDA LO SUFICIENTE"
+    mensajeCodificado = codificar(alfabeto,codigo,mensaje)
+    
+    print("Mensaje Original: ",mensaje,"\n")
+    print("Mensaje Codificado: ",mensajeCodificado,"\n")
+
+    rendimiento, redundancia = obtenerRendimientoCodigo(codigo,probs)
+    print("Rendimiento: ",rendimiento)
+    print("Redundancia: ",redundancia)
+    print("Tasa de Compresión: ",obtenerTasaCompresion(mensaje,mensajeCodificado))
+    
+    with open(RUTA,"wb") as archivo:
+        archivo.write(mensajeCodificado.encode())
+
 
 def ej9Decompresion():
-    print("Decomprimir o no hacerlo, esa es la cuestión")
+    print("Decomprimir o no hacerlo, esa es la cuestión\n")
+    alfabeto = tp5_ej9.alfabeto
+    probs = tp5_ej9.probs
+    codigo = generarCodigoHuffman(probs)
+    
+    with open(RUTA,"rb") as archivo:
+        mensajeCodificado = archivo.read()
+        mensajeCodificado = mensajeCodificado.decode()
+
+    mensaje = decodificar(alfabeto,codigo,mensajeCodificado)
+    
+    print("Mensaje Codificado: ",mensajeCodificado,"\n")
+    print("Mensaje Original: ",mensaje,"\n")
+
+    rendimiento, redundancia = obtenerRendimientoCodigo(codigo,probs)
+    print("Rendimiento: ",rendimiento)
+    print("Redundancia: ",redundancia)
+    print("Tasa de Compresión: ",obtenerTasaCompresion(mensaje,mensajeCodificado))
+    
+    
+    
+    
 
 ''' 11. Realizar una función en Python que reciba como parámetro una cadena de caracteres con
     un mensaje y devuelva una secuencia de bytes (bytearray) que contenga el mensaje
@@ -307,7 +360,7 @@ def ej12():
         
        
 def main():
-    print("rn: Listening to Supertramp\n")
+    print("rn: Listening to Supertramp\n\n ---- ---- ---- ---- ---- ---- ---- ---- \n\n")
 #    pruebaHuffmanYShannon()
 #    ej4()
 #    ej5()
