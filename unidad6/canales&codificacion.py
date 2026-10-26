@@ -5,7 +5,8 @@ import math
 que contengan secuencias de entrada y de salida de un canal y retorne la matriz que
 representa dicho canal. '''
 
-def generarMatriz():
+def generarMatriz(entrada,salida):
+    
 
 def main():
     print("hallo, ich bin Mauro's Geist'n")
