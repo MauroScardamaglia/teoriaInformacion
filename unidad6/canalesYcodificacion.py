@@ -324,12 +324,138 @@ def ej13():
     c. La entropía afín
     d. La información mutua '''
 
+def obtenerRuido(probabilidadesPriori,matrizCanal): # H(A/B)
+    s = len(matrizCanal[0])
+    probsSalida = generarProbabilidadesSalida(probabilidadesPriori,matrizCanal)
+    entropiasPost = generarEntropiasPosteriori(probabilidadesPriori,matrizCanal) 
+
+    ruido = 0
+    for j in range(s):
+        ruido += probsSalida[j] * entropiasPost[j]
+    return ruido
+
+
+def obtenerPerdida(probabilidadesPriori,matrizCanal): # H(B/A)
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+
+
+    # obtengo H(B/ai) (entropiaCondicionalSalida)
+
+    entropiasCondicionalSalida = [0] * r    
+    for i in range(r):
+        for j in range(s):
+            prob = matrizCanal[i][j]
+            if (prob > 0):
+                entropiasCondicionalSalida[i] += prob * math.log2(1/prob)
+
+    # -----
+
+    perdida = 0
+    for i in range(r):
+        perdida += probabilidadesPriori[i] * entropiasCondicionalSalida[i]
+
+    return perdida
+
+
+def obtenerEntropiaAfin(probabilidadesPriori,matrizCanal): # H(A,B) # entropia afín <-> entropía conjunta
+    entropiaPriori = obtenerEntropia(probabilidadesPriori,2)
+    entropiaSalida = obtenerEntropia(generarProbabilidadesSalida(probabilidadesPriori,matrizCanal),2)
+    informacionMutua = obtenerInformacionMutua(probabilidadesPriori,matrizCanal)
+    return entropiaPriori + entropiaSalida - informacionMutua
+
+
+def obtenerInformacionMutua(probabilidadesPriori,matrizCanal): # I(A,B)
+    entropiaPriori = obtenerEntropia(probabilidadesPriori,2)
+    ruido = obtenerRuido(probabilidadesPriori,matrizCanal)
+    return entropiaPriori - ruido
+
+def auxEj16(probabilidadesPriori,matrizCanal):
+    print(f"a) Entropía a Priori H(A) = {obtenerEntropia(probabilidadesPriori,2):.4f}")
+    print(f"b) Entropía de la Salida H(B) = {obtenerEntropia(generarProbabilidadesSalida(probabilidadesPriori,matrizCanal),2):.4f}")
+    print(f"c) Equivocación de A respecto a B / Ruido H(A/B) = {obtenerRuido(probabilidadesPriori,matrizCanal):.4f}")
+    print(f"d) Pérdida H(B/A) = {obtenerPerdida(probabilidadesPriori,matrizCanal):.4f}")
+    print(f"e) Entropía Afín/Conjunta H(A,B) = {obtenerEntropiaAfin(probabilidadesPriori,matrizCanal):.4f}")
+    print(f"f) Información Mutua I(A,B) = {obtenerInformacionMutua(probabilidadesPriori,matrizCanal):.4f}")
+    print("\n\n")
+
+def ej16():
+    print("--- Ejercicio 13 ---\n")
+    probsEj13_1=[0.14,0.52,0.34]
+    matEj13_1=[[0.5,0.3,0.2], [0.0,0.4,0.6], [0.2,0.8,0.0]]
+    probsEj13_2=[0.25,0.25,0.5]
+    matEj13_2=[[0.25, 0.25, 0.25, 0.25], [0.25, 0.25, 0.0, 0.5], [0.5, 0.0, 0.5, 0.0]]
+    probsEj13_3=[0.12, 0.24, 0.14, 0.5]
+    matEj13_3=[[0.25,0.15,0.3,0.3], [0.23,0.27,0.25,0.25], [0.1,0.4,0.25,0.25], [0.34,0.26,0.2,0.2]]
+
+    probs = [probsEj13_1,probsEj13_2,probsEj13_3]
+    mats = [matEj13_1,matEj13_2,matEj13_3]
+
+    for prob,mat in zip(probs,mats):
+        auxEj16(prob,mat)
+
+    print("--- Ejercicio 14 --- \n")
+    probsEj14_1=[0.7,0.3]
+    matEj14_1=[[0.7,0.3],[0.4,0.6]]
+
+    probsEj14_2=[0.5,0.5]
+    matEj14_2 = [[0.3,0.3,0.4],[0.3,0.3,0.4]]
+
+    probsEj14_3=[0.25,0.5,0.25]
+    matEj14_3 = [[1,0,0,0],[0,0.5,0.5,0],[0,0,0,1]]
+
+    probsEj14_4=[0.25,0.25,0.25,0.25]
+    matEj14_4 = [[1,0,0],[0,1,0],[0,1,0],[0,0,1]]
+
+    probs = [probsEj14_1,probsEj14_2,probsEj14_3,probsEj14_4]
+    mats = [matEj14_1,matEj14_2,matEj14_3,matEj14_4]
+
+    for prob,mat in zip(probs,mats):
+        auxEj16(prob,mat)
 
 '''
     18. Realizar funciones booleanas en Python que reciban como parámetro la matriz de un canal
     y verifiquen si se trata de:
     a. Un canal sin ruido
     b. Un canal determinante '''
+
+def esCanalSinRuido(matrizCanal):
+    aux = True
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+    j = 0
+    
+    while (aux and j<s):
+        i = 0
+        cantEncontrado = 0
+        while (cantEncontrado <= 1 and i<r):
+            if (matrizCanal[i][j] > 0):
+                cantEncontrado += 1
+            j += 1
+
+        aux = cantEncontrado <= 1
+
+    return aux
+
+    
+
+def esCanalDeterminante(matrizCanal):
+    aux = True
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+    i = 0
+    
+    while (aux and i<r):
+        j = 0
+        cantEncontrado = 0
+        while (cantEncontrado <= 1 and j<s):
+            if (matrizCanal[i][j] > 0):
+                cantEncontrado += 1
+            j += 1
+
+        aux = cantEncontrado <= 1
+
+    return aux
 
 
 '''
@@ -379,6 +505,7 @@ def main():
     # ej9()
     # ej10()
     # ej12()
-    ej13()
+    # ej13()
+    ej16()
 
 main()
