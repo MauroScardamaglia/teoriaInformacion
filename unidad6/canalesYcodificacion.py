@@ -431,10 +431,10 @@ def esCanalSinRuido(matrizCanal):
         while (cantEncontrado <= 1 and i<r):
             if (matrizCanal[i][j] > 0):
                 cantEncontrado += 1
-            j += 1
-
+            i += 1
         aux = cantEncontrado <= 1
-
+        j += 1
+        
     return aux
 
     
@@ -452,16 +452,53 @@ def esCanalDeterminante(matrizCanal):
             if (matrizCanal[i][j] > 0):
                 cantEncontrado += 1
             j += 1
-
         aux = cantEncontrado <= 1
+        i += 1
 
     return aux
 
+def auxComprobarFuncionamientoCanalesRuidoODeterminante(): # cortito el título
+    canales = [ # si tengo una lista de matrices, sería como un cubo? (claro que no regular, onda no tienen las mismas dimensiones todas las matrices)
+    [[0,1,0],[0,0,1],[0,1,0],[1,0,0]],
+    [[1,0,0,0],[0,0.2,0,0.8],[0,0,1,0]],
+    [[0.3,0.5,0.2],[0.2,0.3,0.5],[0.5,0.2,0.3]],
+    [[0,0,1,0],[1,0,0,0],[0,1,0,0],[0,0,0,1]]
+    ]
+    
+    for matriz in canales:
+        print("Matriz:")
+        imprimirMatriz(matriz)
+        print()
+        if (not esCanalSinRuido(matriz)):
+            print("No ",end="")
+        print("Es canal Sin Ruido")
+        
+        if (not esCanalDeterminante(matriz)):
+            print("No ",end="")
+        print("Es canal Determinante")
+        print("\n\n")
 
 '''
     20. Implementar una función en Python que reciba como parámetros las matrices de dos
     canales y genere la matriz del canal compuesto por los canales en serie. '''
 
+def generarMatrizCompuesta(matrizA,matrizB): # productoMatricial
+    # productoMatricial
+    r = len(matrizA)
+    s = len(matrizB)
+    
+    matrizC = [ [0] * (s-1) for _ in range(r)]
+    
+    for i in range(r):
+        for j in range(s-1):
+            # elemento actual de la nueva matriz
+            aux = 0
+            for k in range(s):
+                aux += matrizA[i][k]* matrizB[k][j]
+            matrizC[i][j] = aux
+        
+    return matrizC
+            
 
 
 '''
@@ -470,12 +507,72 @@ def esCanalDeterminante(matrizCanal):
     a. Verificar si las columnas se pueden combinar en una reducción suficiente
     b. Generar la matriz del canal determinante necesario para combinar las columnas '''
 
+def columnasSonCombLineal(matrizCanal,j1,j2):
+    aux = True
+    r = len(matrizCanal)
+    i = 1
+    proporcion = matrizCanal[i][j2] / matrizCanal[i][j1] # factor que multiplica a la primera columna para ser igual a la segunda (el orden es arbitrario)
+    while (aux and i<r):
+        aux = (matrizCanal[i][j1] * proporcion) == matrizCanal[i][j2]
+        i += 1
+    return aux
+    
+def generarMatrizDeterminante(matrizCanal,j1,j2):
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+    matrizDeterminante = [[0] * (s-1) for _ in range(r)]
+    if (j2<j1):
+        aux = j2
+        j2 = j1
+        j1 = aux
+    k = 0
+    for i in range(s):
+        if (i == j2):
+            matrizDeterminante[i][j1] = 1
+        else:
+            matrizDeterminante[i][k] = 1
+            k += 1
+            
+    return matrizDeterminante
+
+
 '''
     23. Codificar una función en Python que reciba como parámetro la matriz de un canal y,
     utilizando las funciones de los ejercicios 20 y 22, realice todas las reducciones suficientes
     posibles y devuelva la matriz del canal reducido '''
 
+def esReducible(matriz): # devuelve las columnas j1 y j2 (que son CL), en caso de no ser reducible devuelve (-1,-1)
+    # comprobación de reducción posible
+        s = len(matriz[0])
+        j1 = 0
+        while (not aux and j1 < s):
+            j2 = j1 + 1
+            while(not aux and j2 < s):
+                aux = columnasSonCombLineal(matriz,j1,j2)
+                j2 += 1
+            j1 += 1
+            
+        if (aux):
+            j1 -= 1
+            j2 -= 1
+            return j1, j2
+        else:
+            return -1, -1
+        
 
+def reducirMatriz(matrizCanal):
+    matriz = matrizCanal
+    while (True):
+        j1, j2 = esReducible(matriz)
+        if (j1 == -1):
+            break
+        matDet = generarMatrizDeterminante(matriz,j1,j2)
+        matriz = generarMatrizCompuesta(matriz,matDet)
+        
+    return matriz
+    
+    
+    
 '''
     25. Implementar funciones en Python que reciban como parámetro la matriz de un canal y
     resuelvan lo siguiente:
@@ -506,6 +603,7 @@ def main():
     # ej10()
     # ej12()
     # ej13()
-    ej16()
+    # ej16()
+    auxComprobarFuncionamientoCanalesRuidoODeterminante()
 
 main()
