@@ -576,11 +576,60 @@ def reducirMatriz(matrizCanal):
 '''
     25. Implementar funciones en Python que reciban como parámetro la matriz de un canal y
     resuelvan lo siguiente:
-    a. Verificar si se trata de un canal uniforme
+
+    a. Verificar si se trata de un canal uniforme (no entra en el parcial) '''
+
+def esCanalUniforme(matrizCanal):
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+
+    # verifico que todas las filas sean permutaciones entre sí
+    elementos = matrizCanal[0]
+    i = 0
+    aux = True
+    while(i<r):
+        j = 0
+        while(aux and j<s):
+            aux = matrizCanal[i][j] in elementos
+            j += 1
+        i += 1
+
+    # verifico que sean permutaciones distintas (en caso contrario las columnas no suman 1 y... 
+    # arbitrariamente, eligo el primer elemento de la primera fila, y verifico que el j donde se ubica sea distinto en todas las filas
+    posiciones = [-1] * r
+    valor = matrizCanal[0][0]
+    i = 0
+    while (aux and i < r):
+        posiciones[i] = matrizCanal[i].index(valor)
+        k = 0
+        while (aux and k < i):
+            aux = posiciones[i] not in posiciones[0:i]
+            k += 1
+        i += 1
+
+    return aux
+
+def auxProbarEsCanalUniforme():
+    canal = [[0.3,0.5,0.2],[0.2,0.3,0.5],[0.5,0.2,0.3]] # -> true 
+#    canal = [[0.3,0.5,0.2],[0.2,0.3,0.5],[0.2,0.3,0.5]] #[0.5,0.2,0.3]] # -> false
+    imprimirMatriz(canal,cantDecimales=4)
+    print("Es uniforme? -> ",esCanalUniforme(canal))
+
+    
+'''
     b. Calcular su capacidad en los siguientes casos:
     i. Canal determinante
     ii. Canal sin ruido
-    iii. Canal uniforme '''
+    iii. Canal uniforme (no entra en el parcial) '''
+
+def capacidadCanalDeterminante(matrizCanal):
+    return math.log2( len(matrizCanal[0]) ) # log2(s) , s= cantSalidas
+
+def capacidadCanalSinRuido(matrizCanal):
+    return math.log2( len(matrizCanal) ) # log2(r) , r= cantidadEntradas
+
+def capacidadCanalUniforme(matrizCanal): # no entra en el parcial
+    return math.log2(len(matrizCanal[0])) - obtenerEntropia(matrizCanal[0]) # log2(s) - H(fila)
 
 '''
     26. Realizar una función en Python que reciba como parámetros: la matriz de un canal binario
@@ -590,10 +639,74 @@ def reducirMatriz(matrizCanal):
     probabilidad asociada. '''
 
 
+def capacidadCanalBinario(matrizCanal,paso): # Binario -> r = s = 2 (no necesariamente simétrico)
+    p = 0 # o pInicial = paso ?? 
+    infoMaxima = -1
+    pMaximo = -1
+
+    while (p <=1):
+        probsPriori = [p,1-p] # [p, compl(p)]
+        infMutua = obtenerInformacionMutua(probsPriori,matrizCanal)
+        if (infMutua > infoMaxima):
+            infoMaxima = infMutua
+            pMaximo = p
+        p += paso
+
+    capacidad = infoMaxima # completamente innecesario, pero queda más claro el concepto
+    return capacidad, pMaximo
+
+    
+# 27. Para cada uno de los siguientes canales binarios, determinar su capacidad y la distribución
+# de probabilidades a priori que maximiza la información mutua:
+
+def ej27():
+    canal1 = [[0.6,0.4],[0.2,0.8]]
+    canal2 = [[0.25,0.75],[0.9,0.1]]
+    canal3 = [[0.51,0.49],[0.72,0.28]]
+    canal4 = [[0.77,0.23],[0.2,0.8]]
+
+    canales = [canal1,canal2,canal3,canal4]
+    paso = 0.0001 # 100 iteraciones (o 101?)
+
+    for i,canal in zip(range(len(canales)),canales):
+        print(f"Canal {i}")
+        capacidad, pMaximo = capacidadCanalBinario(canal,paso)
+        print(f"La información mutua máxima (Capacidad) es C = {capacidad:.4f}")
+        print(f"La distribución de Probabilidades a Priori correspondiente es: [{pMaximo:.4f},{(1-pMaximo):.4f}]")
+        print("\n\n")
+
+
 '''
     30. Desarrollar una función en Python que reciba como parámetros: una lista con
     probabilidades a priori y la matriz de un canal, y calcule la probabilidad de error utilizando
     la regla de decisión de máxima posibilidad. '''
+
+def obtenerProbabilidadError(probabilidadesPriori,matrizCanal):
+    r = len(matrizCanal)
+    s = len(matrizCanal[0])
+    matProbsPost = generarMatrizProbabilidadesPosteriori(probabilidadesPriori,matrizCanal)
+    probsSalida = generarProbabilidadesSalida(probabilidadesPriori,matrizCanal)
+    probsError = [0] * s
+    
+    for j in range(s):
+        # encuentro el a* (el i de esa columna con la mayor probabilidad)
+        aEstrella = -1 # por poner un valor predeterminado imposible
+        valMaximo = 0
+        for i in range(r):
+            if (matProbsPost[i][j] > valMaximo):
+                valMaximo = matProbsPost[i][j]
+                aEstrella = i
+
+        # obtengo la probabilidad de Error de la columna actual P(E/bj)
+        probsError[j] = 1 - valMaximo
+
+    probabilidadError = 0
+    for j in range(s):
+        probabilidadError += probsError[j] * probsSalida[j]
+
+    return probabilidadError
+
+# ---------------------- MAIN ----------------------
 
 def main():
     print("hallo, ich bin Mauro's Geist \n")
@@ -604,6 +717,8 @@ def main():
     # ej12()
     # ej13()
     # ej16()
-    auxComprobarFuncionamientoCanalesRuidoODeterminante()
+    # auxComprobarFuncionamientoCanalesRuidoODeterminante()
+    # ej27()
+    auxProbarEsCanalUniforme()
 
 main()
