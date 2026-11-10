@@ -1,7 +1,20 @@
-# software necesario para resolver el 2do Parcial
-
 import math
 import random
+
+# software necesario para resolver el 2do Parcial
+
+# CORREGIR TASA DE COMPRESIÓN (DEVOLVER DECIMAL)
+# USAR BYTEARRAY
+# EN CORRECCIÓN DE MATRICES CON REDUNDANCIA: ANALIZAR PRIMERO BIT DE PARIDAD CRUZADA
+
+# EMPROLIJAR CÓDIGO
+# REDUCIR CÓDIGO SI ES NECESARIO
+
+# ALGO MÁS???
+
+
+
+
 
 def imprimirLista(lista,cantDecimales=4):
     n = len(lista)
@@ -289,6 +302,9 @@ def corregirMensaje(mensaje): # devuelve el mensaje original, si no había error
     
     n = len(mensaje)
     m = len(mensaje[0])
+
+    # ANALIZAR PRIMERO BIT DE PARIDAD CRUZADA
+
 
     i = 0
     while (len(filasConErrores) <=1 and i < n):
