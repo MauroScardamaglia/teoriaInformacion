@@ -115,7 +115,7 @@ def cumpleShannon(palabrasCodigo, probabilidades, n,mostrar = False):
     print("Ln/n = ",longMedia/n)
     print("Hr(S) + 1/n = ",cotaSup)
 
-    return (cotaInf <= longMedia/n) and (longMedia/n < cotaSup)    
+    return (cotaInf <= longMedia/n) and (longMedia/n < cotaSup)
 
     
 def ej1(palabrasCodigo,probabilidades,n):
