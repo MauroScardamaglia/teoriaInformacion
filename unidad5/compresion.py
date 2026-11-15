@@ -242,11 +242,11 @@ def decodificar(alfabeto,codigo,mensaje): # mensaje codificado ("1010100")
     con un mensaje y una secuencia de bytes (bytearray) con ese mensaje codificado y calcule
     la tasa de compresión.
 '''
-def obtenerTasaCompresion(original,comprimido):
-    largoOg = len(original)
-    largoComp = len(comprimido)
-    proporcion = round(largoOg / largoComp)
-    return str(proporcion) + ":1"
+def obtenerTasaCompresion(cadenaOriginal,bytearrayComprimido): # recibe string original y el comprimido en bytearray
+    largoOg = len(cadenaOriginal)
+    largoComp = len(bytearrayComprimido)
+    proporcion = largoOg / largoComp
+    return proporcion
 
 ''' 9. Dada la siguiente tabla de probabilidades:
 
@@ -323,20 +323,20 @@ def ej9Decompresion():
     del carácter y otro byte para el número. '''
 
 def comprimirRLC(mensaje): # recibe mensaje tipo string, devuelve string formato "L2T3M1", la función es case sensitive
-    res = ""
+    res = bytearray()
     cant = 1
     letra = mensaje[0]
     if (len(mensaje) > 1):
         for c in mensaje[1:]:
             if (c != letra):
-                res += letra
-                res += str(cant)
+                res.append(ord(letra))
+                res.append(cant)
                 cant = 1
                 letra = c
             else:
                 cant += 1
-    res += letra
-    res += str(cant)
+    res.append(ord(letra))
+    res.append(cant)
     return res
     
     
@@ -364,8 +364,8 @@ def main():
 #    pruebaHuffmanYShannon()
 #    ej4()
 #    ej5()
-    ej9()
-#    ej12()
+#    ej9()
+    ej12()
     
 print()
 main()

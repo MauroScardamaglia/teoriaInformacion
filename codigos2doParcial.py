@@ -178,10 +178,10 @@ def obtenerLongitudMedia(palabrasCodigo, probabilidades):
     return sum([prob * len(palabra) for palabra,prob in zip(palabrasCodigo, probabilidades)])
 
 # se pasa el código original
-def cumpleShannon(palabrasCodigo, probabilidades, n,mostrar = False):
+def cumpleShannon(palabrasCodigo, probabilidades, n, mostrar = False):
 # Las probabilidades que recibo son las de la fuente original, q probabilidades
 #
-# Tengo que pasar el código para la extensión
+# Tengo que pasar las palabras código para la extensión
 # y calcular el código acorde antes de llamar a la función
 # el dolor de huevos está en calcular un código eficiente (que es complejo por su largo)
 #
@@ -191,7 +191,7 @@ def cumpleShannon(palabrasCodigo, probabilidades, n,mostrar = False):
     probabilidadesExt = generarExtensionProbabilidades(probabilidades,n)
     entropia = obtenerEntropia(probabilidades, len(alfabetoCodigo))
 
-    longMedia = obtenerLongitudMedia(palabrasCodigo,probabilidadesExt)
+    longMedia = obtenerLongitudMedia(palabrasCodigo,probabilidadesExt) # Ln
     cotaInf = entropia
     cotaSup = entropia + 1/n
 
@@ -202,11 +202,11 @@ def cumpleShannon(palabrasCodigo, probabilidades, n,mostrar = False):
 
     return (cotaInf <= longMedia/n) and (longMedia/n < cotaSup)
 
-def obtenerRendimientoCodigo(codigo,probabilidades): # retorna rendimiento, redundancia (η, R)
-    alfabetoCodigo = generarAlfabetoCodigo(codigo)
+def obtenerRendimientoCodigo(palabrasCodigo,probabilidades): # retorna rendimiento, redundancia (η, R)
+    alfabetoCodigo = generarAlfabetoCodigo(palabrasCodigo)
     r = len(alfabetoCodigo)
     entropia = obtenerEntropia(probabilidades, r)
-    longMedia = obtenerLongitudMedia(codigo,probabilidades)
+    longMedia = obtenerLongitudMedia(palabrasCodigo,probabilidades)
     return entropia / longMedia , 1 - (entropia / longMedia)
 
 def obtenerDistanciaHamming(cad1,cad2,mostrar=False):
@@ -304,8 +304,9 @@ def corregirMensaje(mensaje): # devuelve el mensaje original, si no había error
     m = len(mensaje[0])
 
     # ANALIZAR PRIMERO BIT DE PARIDAD CRUZADA
-
-
+    # al final decidí verificar si el error está en el bit de paridad cruzado al final de la función
+    
+    
     i = 0
     while (len(filasConErrores) <=1 and i < n):
         if (not verificarParidad(mensaje[i])):
@@ -327,11 +328,17 @@ def corregirMensaje(mensaje): # devuelve el mensaje original, si no había error
     else: # 1 error solo (β = 1)
         i = filasConErrores[0]
         j = colConErrores[0]
+        
+        if (i == n-1 and j == m-1): # el error está en el bit de paridad cruzada, no se puede asumir la integridad del mensaje
+            return [["?"] * m] * n
+        
         if (mensaje[i][j] == "0"):
             mensaje[i][j] = "1"
         else:
             mensaje[i][j] = "0"
         return mensaje
+
+
 
 
 # ------------------- COMPRESIÓN ------------------- 
@@ -409,7 +416,63 @@ def shannonFanoRecursivo(items):
         shannonFanoRecursivo(mitad2)
 
 
-def codificar(alfabeto,codigo,mensaje): # mensaje fuente ("ABwOz")
+def enteroACadenaBinaria(numero,cantBitsRelleno = 0): # recibo un entero entre 0 y 255
+    cadena = ""
+    restos = []
+    while (numero != 0):
+        resto = numero % 2
+        restos.append(resto)
+        numero // 2  # // -> división entera
+        
+    if (len(restos) < 8):
+        restos.extend[[0] * ( 8 - len(restos) )]
+    for i in range(8):
+        if (restos[7 -i] == 0):
+            cadena += '0'
+        else:
+            cadena += '1'
+
+    return cadena[0:8-cantBitsRelleno]
+
+def binarioACadena(binario,cantBitsRelleno):
+    cadena = ""
+        
+    if (cantBitsRelleno == 0):
+        for k in range(len(binario)):
+            i = k*8
+            byte = binario[k]
+            num = ord(byte)
+            cadena += enteroACadenaBinaria(num)
+    else:
+        for k in range(len(binario) - 1):
+            i = k*8
+            byte = binario[k]
+            num = ord(byte)
+            cadena += enteroACadenaBinaria(num)
+        num = ord(binario[k])
+        cadena += enteroACadenaBinaria(num,cantBitsRelleno)
+    
+    return cadena
+
+def cadenaABinario(cadenaBinaria): # me pasan, por ej, '01001010' si el largo de la cadena no es multiplo de 8, relleno con 0?? -- len(cadena) != 8 * i
+    binario = bytearray()
+    # cuantos bits de relleno vamos a agregar
+    # si tenemos '01011' el resto es 5 y entonces hay 3 bits de relleno
+    # si tenemos '01011001' el resto da 8, y el segundo %8 da 0 bits de relleno
+    cantBitsRelleno = (8 - len(cadenaBinaria) % 8) % 8
+    mensaje += "0" * cantBitsRelleno # uso 0 arbitrariamente
+    
+    for i in range(0,len(mensaje),8): # me muevo de a 8 bits
+        byte = mensaje[i:i+8]
+        binario.append(int(byte,2)) # transformo la porción de 8 bits de la cadena binaria a enteros, siendo la cadena en base 2
+
+    return binario, cantBitsRelleno
+
+def codificar(alfabeto,palabrasCodigo,mensaje): # mensaje fuente ("ABwOz") ; devuelve byteArray y cantBitsRelleno
+    # explicación bits relleno
+    # si tenemos '010' y lo pasamos a bytearray, o rellenamos con 0 al principio o al final
+    # y luego para decodificar debemos saber que esos 0 son relleno y no información real del mensaje original
+    # 010 + 00000 -> 010
     msjCodificado = ""
     palabraFuente = "" # ¿Es correcto conceptualmente "palabraFuente"?
 
@@ -417,14 +480,16 @@ def codificar(alfabeto,codigo,mensaje): # mensaje fuente ("ABwOz")
         palabraFuente += c
         if (palabraFuente in alfabeto):
             i = alfabeto.index(palabraFuente)
-            msjCodificado += codigo[i]
+            msjCodificado += palabrasCodigo[i]
             palabraFuente = ""        
 
-    return msjCodificado
+    return cadenaABinario(msjCodificado)
 
-def decodificar(alfabeto,codigo,mensaje): # mensaje codificado ("1010100")
+def decodificar(alfabeto,codigo,binario,cantBitsRelleno): # mensaje codificado en bytearray y las cantidades de bits de relleno para distinguir de la información original
     msjDecodificado = ""
     palabraCodigo = ""
+
+    mensaje = binarioACadena(binario,cantBitsRelleno)
 
     for b in mensaje: # b de bit
         palabraCodigo += b
@@ -435,28 +500,40 @@ def decodificar(alfabeto,codigo,mensaje): # mensaje codificado ("1010100")
 
     return msjDecodificado
 
-def obtenerTasaCompresion(original,comprimido):
-    largoOg = len(original)
-    largoComp = len(comprimido)
-    proporcion = round(largoOg / largoComp)
-    return str(proporcion) + ":1"
+def obtenerTasaCompresion(cadenaOriginal,bytearrayComprimido): # recibe string original y el comprimido en bytearray
+    largoOg = len(cadenaOriginal)
+    largoComp = len(bytearrayComprimido)
+    proporcion = largoOg / largoComp
+    return proporcion
 
 def comprimirRLC(mensaje): # recibe mensaje tipo string, devuelve string formato "L2T3M1", la función es case sensitive
-    res = ""
+    res = bytearray()
     cant = 1
     letra = mensaje[0]
     if (len(mensaje) > 1):
         for c in mensaje[1:]:
             if (c != letra):
-                res += letra
-                res += str(cant)
+                res.append(ord(letra))
+                res.append(cant)
                 cant = 1
                 letra = c
             else:
                 cant += 1
-    res += letra
-    res += str(cant)
+    res.append(ord(letra))
+    res.append(cant)
     return res
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
