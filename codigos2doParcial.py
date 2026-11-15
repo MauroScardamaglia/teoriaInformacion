@@ -416,43 +416,17 @@ def shannonFanoRecursivo(items):
         shannonFanoRecursivo(mitad2)
 
 
-def enteroACadenaBinaria(numero,cantBitsRelleno = 0): # recibo un entero entre 0 y 255
-    cadena = ""
-    restos = []
-    while (numero != 0):
-        resto = numero % 2
-        restos.append(resto)
-        numero // 2  # // -> división entera
-        
-    if (len(restos) < 8):
-        restos.extend[[0] * ( 8 - len(restos) )]
-    for i in range(8):
-        if (restos[7 -i] == 0):
-            cadena += '0'
-        else:
-            cadena += '1'
-
-    return cadena[0:8-cantBitsRelleno]
-
 def binarioACadena(binario,cantBitsRelleno):
     cadena = ""
+
+    for byte in binario:
+        cadena += format(byte,"08b")
         
-    if (cantBitsRelleno == 0):
-        for k in range(len(binario)):
-            i = k*8
-            byte = binario[k]
-            num = ord(byte)
-            cadena += enteroACadenaBinaria(num)
-    else:
-        for k in range(len(binario) - 1):
-            i = k*8
-            byte = binario[k]
-            num = ord(byte)
-            cadena += enteroACadenaBinaria(num)
-        num = ord(binario[k])
-        cadena += enteroACadenaBinaria(num,cantBitsRelleno)
-    
+    if (cantBitsRelleno > 0):
+        cadena = cadena[:-cantBitsRelleno]
+        
     return cadena
+        
 
 def cadenaABinario(cadenaBinaria): # me pasan, por ej, '01001010' si el largo de la cadena no es multiplo de 8, relleno con 0?? -- len(cadena) != 8 * i
     binario = bytearray()
@@ -460,10 +434,10 @@ def cadenaABinario(cadenaBinaria): # me pasan, por ej, '01001010' si el largo de
     # si tenemos '01011' el resto es 5 y entonces hay 3 bits de relleno
     # si tenemos '01011001' el resto da 8, y el segundo %8 da 0 bits de relleno
     cantBitsRelleno = (8 - len(cadenaBinaria) % 8) % 8
-    mensaje += "0" * cantBitsRelleno # uso 0 arbitrariamente
+    cadenaBinaria += "0" * cantBitsRelleno # uso 0 arbitrariamente
     
-    for i in range(0,len(mensaje),8): # me muevo de a 8 bits
-        byte = mensaje[i:i+8]
+    for i in range(0,len(cadenaBinaria),8): # me muevo de a 8 bits
+        byte = cadenaBinaria[i:i+8]
         binario.append(int(byte,2)) # transformo la porción de 8 bits de la cadena binaria a enteros, siendo la cadena en base 2
 
     return binario, cantBitsRelleno
@@ -858,3 +832,23 @@ def obtenerProbabilidadError(probabilidadesPriori,matrizCanal):
         probabilidadError += probsError[j] * probsSalida[j]
 
     return probabilidadError
+
+def main():
+    alfabeto = ['A','B','C']
+    codigo = ["0","10","11"]
+    mensaje = "ABCABCA"
+    print("Alfabeto: ",alfabeto)
+    print("Código: ",codigo)
+    print("Mensaje: ",mensaje,end = "\n\n")
+    # -> 0 10 11 0 10 11 0
+    # 11 bits, 3 relleno
+    
+    binario, relleno = codificar(alfabeto,codigo,mensaje)
+    print("Binario: ",binario)
+    print("Cant Relleno: ",relleno,end = "\n\n")
+    
+    cadenaOriginal = decodificar(alfabeto,codigo,binario,relleno)
+    print("Cadena original: ",cadenaOriginal,end = "\n\n")
+        
+    
+main()
