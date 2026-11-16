@@ -897,6 +897,7 @@ def obtenerProbabilidadError(probabilidadesPriori,matrizCanal,tomarEstrellaPoste
     Aclaración: no incluir ningún tipo de redundancia adicional en la codificación, debe
     contener únicamente los códigos de los símbolos del mensaje.
 '''
+consigna1 = "    1. Dado el siguiente mensaje, emitido por una fuente de información:\na. Obtener las probabilidades de los símbolos y la entropía de la fuente\nb. Generar un código binario óptimo para la fuente de información\nc. Determinar la tasa de compresión que se obtiene codificando el mensaje\nd. Generar un código binario óptimo para la extensión de orden 3\ne. Calcular la longitud media, el rendimiento y la redundancia de cada código\nf. Verificar si ambos códigos cumplen con el Primer Teorema de Shannon\nAclaración: no incluir ningún tipo de redundancia adicional en la codificación, debe\ncontener únicamente los códigos de los símbolos del mensaje."
 def ej1():
     mensaje = "GIIHGGGHGIHHIHIIGFHH"
     print("Mensaje Fuente: ",mensaje)
@@ -946,23 +947,24 @@ def ej1():
     print("Cumple el código hecho para ext de orden 3 Shannon? -> ",cumpleShannon(codigoExtendido,probs,3))
 
 
-
 '''
-    2. Dadas las siguientes secuencias de entrada y salida de un canal:
-    a. Obtener las probabilidades a priori y la matriz del canal
-    b. Informar si se trata de un canal sin ruido y/o determinante
-    c. Calcular la equivocación, la pérdida y la información mutua
-    d. Efectuar todas las reducciones suficientes posibles en el canal
-    e. Determinar la capacidad y la probabilidad de error del canal
-    f. Detectar y/o corregir los errores en la secuencia de entrada
-    Aclaración: asumir que la secuencia de entrada contiene un mensaje representado
-    con código ASCII y sus bits de paridad vertical, longitudinal y cruzada.
+2. Dadas las siguientes secuencias de entrada y salida de un canal:
+a. Obtener las probabilidades a priori y la matriz del canal
+b. Informar si se trata de un canal sin ruido y/o determinante
+c. Calcular la equivocación, la pérdida y la información mutua
+d. Efectuar todas las reducciones suficientes posibles en el canal
+e. Determinar la capacidad y la probabilidad de error del canal
+f. Detectar y/o corregir los errores en la secuencia de entrada
+Aclaración: asumir que la secuencia de entrada contiene un mensaje representado
+con código ASCII y sus bits de paridad vertical, longitudinal y cruzada.
 '''
 
+consigna2 = "    2. Dadas las siguientes secuencias de entrada y salida de un canal:\n" + "    a. Obtener las probabilidades a priori y la matriz del canal\n" + "    b. Informar si se trata de un canal sin ruido y/o determinante\n" + "    c. Calcular la equivocación, la pérdida y la información mutua\n" + "    d. Efectuar todas las reducciones suficientes posibles en el canal\n" + "    e. Determinar la capacidad y la probabilidad de error del canal\n" + "    f. Detectar y/o corregir los errores en la secuencia de entrada\n" + "    Aclaración: asumir que la secuencia de entrada contiene un mensaje representado\n" + "    con código ASCII y sus bits de paridad vertical, longitudinal y cruzada.\n"
 def ej2():
     entrada = "10100000101011101001111110011001"
     salida = "QQPQQPPQQQPQRRRQSPQSQRQSQQPSQQPP"
-    
+    print(entrada)
+    print(salida)
     #a)
     print("a)")
     probs = generarProbabilidades(entrada)
@@ -1014,7 +1016,7 @@ def ej2():
     print(f"Capacidad (C) = {capacidad:.4f}")
     print("Probs A Posteriori dadas: ")
     imprimirLista([pMaximo,1-pMaximo])
-    probError = obtenerProbabilidadError(probs,matrizCanal)
+    probError = obtenerProbabilidadError(probs,matrizReducida)
     # probError = obtenerProbabilidadError(probs,matrizCanal,False)
     print(f"Probabilidad de Error P(E) = {probError:.4f}")
     
@@ -1040,7 +1042,11 @@ def main():
     print("Hallo Welt")
     print("--- 2DO PARCIAL 2C 2025 ---\n\n")    
     
-    # ej1()
+    print("\n-- Ejercicio 1 --\n")
+    print(consigna1)
+    ej1()
+    print("\n\n\n-- Ejercicio 2 --\n")
+    print(consigna2)
     ej2()
 
 
