@@ -666,7 +666,6 @@ def obtenerInformacionMutua(probabilidadesPriori,matrizCanal): # I(A,B)
 
 
 
-
 def esCanalSinRuido(matrizCanal):
     aux = True
     r = len(matrizCanal)
@@ -685,7 +684,6 @@ def esCanalSinRuido(matrizCanal):
         
     return aux
 
-    
 
 def esCanalDeterminante(matrizCanal):
     aux = True
@@ -755,6 +753,7 @@ def generarMatrizDeterminante(matrizCanal,j1,j2):
 
 def esReducible(matriz): # devuelve las columnas j1 y j2 (que son CL), en caso de no ser reducible devuelve (-1,-1)
     # comprobación de reducción posible
+        aux = False
         s = len(matriz[0])
         j1 = 0
         while (not aux and j1 < s):
@@ -804,28 +803,43 @@ def capacidadCanalBinario(matrizCanal,paso): # Binario -> r = s = 2 (no necesari
             pMaximo = p
         p += paso
 
-    capacidad = infoMaxima # completamente innecesario, pero queda más claro el concepto
+    capacidad = infoMaxima
     return capacidad, pMaximo
 
 
-def obtenerProbabilidadError(probabilidadesPriori,matrizCanal):
+def obtenerProbabilidadError(probabilidadesPriori,matrizCanal,tomarEstrellaPosteriori=True): # el booleano opcional decide el criterio para elegir a*
     r = len(matrizCanal)
     s = len(matrizCanal[0])
     matProbsPost = generarMatrizProbabilidadesPosteriori(probabilidadesPriori,matrizCanal)
     probsSalida = generarProbabilidadesSalida(probabilidadesPriori,matrizCanal)
     probsError = [0] * s
-    
-    for j in range(s):
-        # encuentro el a* (el i de esa columna con la mayor probabilidad)
-        aEstrella = -1 # por poner un valor predeterminado imposible
-        valMaximo = 0
-        for i in range(r):
-            if (matProbsPost[i][j] > valMaximo):
-                valMaximo = matProbsPost[i][j]
-                aEstrella = i
 
-        # obtengo la probabilidad de Error de la columna actual P(E/bj)
-        probsError[j] = 1 - valMaximo
+    # Franco me dijo que a* se obtiene de la matriz del canal
+    # pero en las filminas se obtiene a partir de la matriz a posteriori
+    # y también a mí me hace más sentido
+
+    if(tomarEstrellaPosteriori): # si tomo criterio de elección según matriz a posteriori
+        for j in range(s):
+            # encuentro el a* (el i de esa columna con la mayor probabilidad)
+            aEstrella = -1 # por poner un valor predeterminado imposible
+            valMaximo = 0
+            for i in range(r):
+                if (matProbsPost[i][j] > valMaximo):
+                    valMaximo = matProbsPost[i][j]
+                    aEstrella = i
+            # obtengo la probabilidad de Error de la columna actual P(E/bj)
+            probsError[j] = 1 - valMaximo
+
+    else: # si tomo criterio de elección según matriz del canal       
+        for j in range(s):
+            aEstrella = -1
+            valMaximo = 0
+            for i in range(r):
+                if (matrizCanal[i][j] > valMaximo):
+                    valMaximo = matrizCanal[i][j]
+                    aEstrella = i
+            valMaximo = matProbsPost[aEstrella][j]
+            probsError[j] = 1 - valMaximo
 
     probabilidadError = 0
     for j in range(s):
@@ -834,21 +848,6 @@ def obtenerProbabilidadError(probabilidadesPriori,matrizCanal):
     return probabilidadError
 
 def main():
-    alfabeto = ['A','B','C']
-    codigo = ["0","10","11"]
-    mensaje = "ABCABCA"
-    print("Alfabeto: ",alfabeto)
-    print("Código: ",codigo)
-    print("Mensaje: ",mensaje,end = "\n\n")
-    # -> 0 10 11 0 10 11 0
-    # 11 bits, 3 relleno
-    
-    binario, relleno = codificar(alfabeto,codigo,mensaje)
-    print("Binario: ",binario)
-    print("Cant Relleno: ",relleno,end = "\n\n")
-    
-    cadenaOriginal = decodificar(alfabeto,codigo,binario,relleno)
-    print("Cadena original: ",cadenaOriginal,end = "\n\n")
-        
+    print("Hallo Welt")
     
 main()
