@@ -9,7 +9,7 @@ def imprimirLista(lista,cantDecimales=4):
     n = len(lista)
     print("[",end="")
     for i in range(n-1):
-        print(f"{lista[i]:.{cantDecimales}f},\t",end="")
+        print(f"{lista[i]:.{cantDecimales}f}, ",end="")
     print(f"{lista[n-1]:.{cantDecimales}f}]")
 
 def imprimirMatriz(mat,cantDecimales=4,alfabetoEnt=[],alfabetoSal=[],mostrar=False): #el código queda medio asquete, pero queda pipí cucú la matriz por consola
@@ -284,13 +284,20 @@ def generarMensajeConParidades(cadena,mostrar = False):
     
     return mat
 
-def corregirMensaje(mensaje): # devuelve el mensaje original, si no había errores o se pueden corregir; caso contrario devuelve algo gracioso xD
+def corregirMensaje(msj): # devuelve el mensaje original, si no había errores o se pueden corregir; caso contrario devuelve algo gracioso xD
+    n = len(msj)
+    m = len(msj[0])
+    mensaje=[]
+    for i in range(n):
+        fila = []
+        for j in range(m):
+            fila.append(msj[i][j])
+        mensaje.append(fila)
+            
     # almacenan i y j's
     filasConErrores = [] 
     colConErrores = [] 
     
-    n = len(mensaje)
-    m = len(mensaje[0])
 
     # ANALIZAR PRIMERO BIT DE PARIDAD CRUZADA
     # al final decidí verificar si el error está en el bit de paridad cruzado al final de la función
@@ -431,13 +438,47 @@ def cadenaABinario(cadenaBinaria): # me pasan, por ej, '01001010' si el largo de
 
     return binario, cantBitsRelleno
 
-def codificar(alfabeto,palabrasCodigo,mensaje): # mensaje fuente ("ABwOz") ; devuelve byteArray y cantBitsRelleno
+
+
+# -- SIN BYTEARRAY --
+
+def codificar(alfabeto,palabrasCodigo,mensaje):
+    msjCodificado = ""
+    palabraFuente = ""
+
+    for c in mensaje: # c de caracter
+        palabraFuente += c
+        if (palabraFuente in alfabeto):
+            i = alfabeto.index(palabraFuente)
+            msjCodificado += palabrasCodigo[i]
+            palabraFuente = ""        
+
+    return msjCodificado
+
+def decodificar(alfabeto,codigo,mensaje):
+    msjDecodificado = ""
+    palabraCodigo = ""
+
+    for b in mensaje: # b de bit
+        palabraCodigo += b
+        if (palabraCodigo in codigo):
+            i = codigo.index(palabraCodigo)
+            msjDecodificado += alfabeto[i]
+            palabraCodigo = ""
+
+    return msjDecodificado
+
+
+
+# -- CON BYTEARRAY --
+
+def codificarByteArray(alfabeto,palabrasCodigo,mensaje): # mensaje fuente ("ABwOz") ; devuelve byteArray y cantBitsRelleno
     # explicación bits relleno
     # si tenemos '010' y lo pasamos a bytearray, o rellenamos con 0 al principio o al final
     # y luego para decodificar debemos saber que esos 0 son relleno y no información real del mensaje original
     # 010 + 00000 -> 010
     msjCodificado = ""
-    palabraFuente = "" # ¿Es correcto conceptualmente "palabraFuente"?
+    palabraFuente = ""
 
     for c in mensaje:
         palabraFuente += c
@@ -448,7 +489,7 @@ def codificar(alfabeto,palabrasCodigo,mensaje): # mensaje fuente ("ABwOz") ; dev
 
     return cadenaABinario(msjCodificado)
 
-def decodificar(alfabeto,codigo,binario,cantBitsRelleno): # mensaje codificado en bytearray y las cantidades de bits de relleno para distinguir de la información original
+def decodificarByteArray(alfabeto,codigo,binario,cantBitsRelleno): # mensaje codificado en bytearray y las cantidades de bits de relleno para distinguir de la información original
     msjDecodificado = ""
     palabraCodigo = ""
 
@@ -463,9 +504,9 @@ def decodificar(alfabeto,codigo,binario,cantBitsRelleno): # mensaje codificado e
 
     return msjDecodificado
 
-def obtenerTasaCompresion(cadenaOriginal,bytearrayComprimido): # recibe string original y el comprimido en bytearray
+def obtenerTasaCompresion(cadenaOriginal,cadenaComprimida):
     largoOg = len(cadenaOriginal)
-    largoComp = len(bytearrayComprimido)
+    largoComp = len(cadenaComprimida)
     proporcion = largoOg / largoComp
     return proporcion
 
@@ -573,7 +614,10 @@ def generarMatrizProbabilidadesPosteriori(probabilidadesPriori,matrizCanal): # P
     
     for i in range(r):
         for j in range(s):
-            matrizPosteriori[i][j] = (matrizCanal[i][j] * probabilidadesPriori[i]) / probsSalida[j]
+            if (probsSalida[j] > 0):
+                matrizPosteriori[i][j] = (matrizCanal[i][j] * probabilidadesPriori[i]) / probsSalida[j]
+            else:
+                matrizPosteriori[i][j] = 0
             
     return matrizPosteriori
 
@@ -711,20 +755,23 @@ def generarMatrizCompuesta(matrizA,matrizB): # productoMatricial
     return matrizC
 
 
-def columnasSonCombLineal(matrizCanal,j1,j2):
+def columnasSonCombLineal(matrizCanal,j1,j2,usarIsclose=False):
     aux = True
     r = len(matrizCanal)
     i = 1
-    proporcion = matrizCanal[i][j2] / matrizCanal[i][j1] # factor que multiplica a la primera columna para ser igual a la segunda (el orden es arbitrario)
+    proporcion = matrizCanal[0][j2] / matrizCanal[0][j1] # factor que multiplica a la primera columna para ser igual a la segunda (el orden es arbitrario)
     while (aux and i<r):
-        aux = (matrizCanal[i][j1] * proporcion) == matrizCanal[i][j2]
+        if (usarIsclose):
+            aux = math.isclose(matrizCanal[i][j1] * proporcion,matrizCanal[i][j2])
+        else:
+            aux = matrizCanal[i][j1] * proporcion == matrizCanal[i][j2]     
         i += 1
     return aux
     
 def generarMatrizDeterminante(matrizCanal,j1,j2):
     r = len(matrizCanal)
     s = len(matrizCanal[0])
-    matrizDeterminante = [[0] * (s-1) for _ in range(r)]
+    matrizDeterminante = [[0] * (s-1) for _ in range(s)]
     if (j2<j1):
         aux = j2
         j2 = j1
@@ -766,9 +813,11 @@ def reducirMatriz(matrizCanal):
         j1, j2 = esReducible(matriz)
         if (j1 == -1):
             break
+        # imprimirMatriz(matriz)
         matDet = generarMatrizDeterminante(matriz,j1,j2)
         matriz = generarMatrizCompuesta(matriz,matDet)
-        
+        # imprimirMatriz(matDet)
+        # imprimirMatriz(matriz)
     return matriz
 
 
@@ -836,7 +885,14 @@ def obtenerProbabilidadError(probabilidadesPriori,matrizCanal,tomarEstrellaPoste
 
     return probabilidadError
 
+
+
+
+
 def main():
     print("Hallo Welt")
+
+
+    
     
 main()
