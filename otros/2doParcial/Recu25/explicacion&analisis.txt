@@ -1,1 +1,31 @@
-52min escribiendo código para que muestre resultados. Corregí un detallito en columnasSonCombinacionLineal
+52min escribiendo código para que muestre resultados. Corregí un detallito en columnasSonCombinacionLineal.
+
+
+-- Ejercicio 1 --
+
+- Explicación del código
+
+a) Para este mensaje codificado, lo pasé a bytearray con una función que hice que transforma cadenas binarias a bytearray, hay un detalle que es importante, que al usar bytearray siempre hay que usar multiplos de 8 bits, es decir si el mensaje ocupa 13 bits, si o si hay que usar 3 bits, por lo que hay que tener información de cuanto bits de relleno se usan, pero como en este caso hay 24 bits, no hay relleno, por lo que no es molestia esto. Luego de pasarlo a bytearray (binario), se pasa por la función decodificar que, pasandole también el alfabeto código y un alfabeto fuente (en este caso me invento uno [A,B,C,D] ), esta función me devuelve el mensaje "original" fuente. Luego con este mensaje fuente lo paso por una función que me devuelve sus probabilidades. Con estas probabilidades obtengo la entropía.
+
+b) Para generar el código para la extensión obtengo las probabilidades de la extension, simplemente multiplicando las probabilidades de los símbolos originales entre sí, luego con dichas probabilidades genero por Huffman el código óptimo para dicha extensión.
+
+c) Para calcular el rendimiento de un código se divide la entropía de la fuente por su longitud, esto da un valor entre 0 y 1, es decir un porcentaje. La redundancia es simplemente el complemento del rendimiento.
+
+d) La longitud media se obtiene sumando por cada palabra la longitud multiplicada por la probabilidad.
+
+- Análisis -
+
+a) La entropía de la fuente es 1.9056 muy cerca de la máxima entropía dados 4 símbolos (2.000), esto tiene sentido dado que las probabilidades no difieren tanto entre sí.
+
+b) El código óptimo para la extensión es adecuado, por lo que veremos después, pero justamente tiene 64 palabras código, 4^3, lo que lo hace un código complejo de manejar.
+
+c) El rendimiento del primer código es de 95%, bastante bueno.
+   El rendimiento del código para la extensión es de 99%, superior. Esto sigue el teorema de shannon, que indica que con un n suficientemente grande ln/n tiende a la entropía.
+
+d) La entropía no depende del código, pero dado que el segundo código es para la extensión, la entropía de este es 3 (n) * la entropía original. Con la longitud Media L del original y Ln/n del segundo, se ve como mejora el segundo código ya que pasa de 2.0000 a 1.9193, acercandose mucho a la entropía, la cota inferior, de 1.9056.
+
+
+----
+1h 30min hasta acá
+Me faltaría justificación de código y análisis del 2do ejercicio, pero ya me tengo que ir al parcial XD.
+Me deseo suerte a mí mismo.
