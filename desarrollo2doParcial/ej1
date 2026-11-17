@@ -1,0 +1,28 @@
+Explicación de la resolución:
+
+a) Obtengo las probabilidades de la fuente con una función que cuenta apariciones de un símbolo fuente, y luego normaliza diviendo por la cantidad total de apariciones de todos los símbolos. Con estas probabilidades, obtengo la entropía sumando las multiplicaciones entre la probabilidad de cada símbolo y su información (el logaritmo, de base 2, del inverso de la probabilidad).
+
+b) Para generar un código óptimo utilizo Huffman, que garantiza la cota L < Hr(S) +1, mientras que Shannon Fano no. Huffman genera un código binario con las probabilidades de los símbolos fuentes, en cada iteración ordenando descendentemente las probabilidades y los grupos de probabilidades, agrupanda las 2 menos probables y luego a la vuelta (a partir de que se tiene 2 probabilidades/grupos) asignando 0 y 1, a cada miembro del grupo.
+
+c) Idem. Utilizo las probabilidades respectivas. Para encontrar las probabilidades respectivas a las extensiones, utilizo una función que, con parámetros probabilidades base y n del orden, por cada combinación de probabilidades de la extensión se mutiplican entre sí sus probabilidades base.
+
+d) Para calcular la longitud media se suman, por cada palabra código, la multiplicación entre su probabilidad y su longitud.
+    Para calcular el rendimiento se divide la entropía por la longitud. Es equivalente matemáticamente usar entropía base y ln/n que hacer entropía de la extensión y ln. El rendimiento es un valor comprendido entre (0,1].
+    Para calcular la redundancia simplemente se hace el complemento del rendimiento (1-η).
+
+
+Análisis de los resultados:
+
+a) La entropía es de 0.7219, esto tiene sentido, está bastante lejos de la entropía máxima dadas 2 probabilidades (1.00) ya que difieren mucho las probabilidades, es decir hay orden. Esto se ve en el propio mensaje en donde hay muchos 0's y pocos 1's.
+
+b) El código binario para la fuente original es 0 para el 0 y 1 para el 1. A pesar de que difieren mucho las probabilidades entre el 0 y el 1, por el contexto de la representación (bits) no podemos aprovechar dicha diferencia, cosa que si podemos hacer con las siguientes extensiones.
+
+c) Para las extensiones se empieza a apreciar esta diferencia, con las palabras código que representan más 0's siempre teniendo largos menores, y las palabras código que representan más 1 teniendo largos mayores. Hay mayor acoplamiento a las probabilidades.
+
+d) Con lo dicho previamente, que sigue el límite dado por el teorema de shannon, que deja entrever que con un n suficientemente grande, la longitud media tiende a la entropía; no es de sorprenderse que esto ya se refleje en los nuevos códigos.
+
+- Se pasan de longitud L = 1.0 a L2/2 = 0.7800 a L3/3 = 0.7280. Esta última se encuentra muuy cerca de la entropía base Hr(S) = 0.7219.
+
+- Es decir que ya con una extensión de orden 3, las longitudes se pueden acercar muchísimo al limite de la entropía dictaminado en el teorema de shannon. Y como en este caso la fuente original era de 2 símbolos, no se complejiza tanto el código de la extensión de orden 3 que pasa a tener 8 símbolos; si hubieramos trabajado con una fuente de 4 símbolos el nuevo código tendría 4^3 = 64 símbolos, mucho más complejo.
+
+- Con respecto a los rendimientos, pasan, respectivamente, de 72.19% (pobre) a 92.55% (decente), a 99.17% (muy bueno, alto acoplamiento con las probabilidades).

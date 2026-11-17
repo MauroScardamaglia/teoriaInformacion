@@ -1,0 +1,38 @@
+- Explicación de la Resolución:
+
+a) Dado que el primer canal es sin ruido, sabemos que su capacidad va a estar determinada por el logaritmo de r, es decir la cantidad de entradas. Es decir las probabilidades que determinan la mayor información son las equiprobables. En este caso con 2 entradas, las probabilidades son [0.5,0.5].
+
+b) Para calcular las 3 métricas paso como parametros las probabilidades a priori y la matriz del respectivo canal a las respectivas funciones.
+
+- La equivocación ó ruido H(A/B) lo calculo ponderando las entropías a posteriori. Las entropías a posteriori H(A/b) se obtienen con las entropías de las columnas de la matriz de probabilidades a posteriori P(a/b), esta matriz se obtiene utilizando bayes. 
+
+- La pérdida H(B/A), la obtengo también ponderando las entropías H(B/a) de las filas de la matriz del canal.
+
+- Aclaro que con ponderando me refiero sumar, por cada fila ó columna, la probabilidad respectiva multiplicada por su entropía respectiva.
+
+- Para obtener la información mutua se puede restar la entropía de salida por la pérdida o la entropía de entrada por el ruido. Yo implementé, arbitrariamente, la segunda opción.
+
+c) Idem
+
+- Para obtener las probabilidades de salida, para cada elemento de salida, se pondera las probabilidades de entrada multiplicadas por la respectiva casilla de la matriz del canal.
+
+d) La probabilidad de error, la obtengo, por cada columna (por cada valor de salida) eligiendo un a* (el valor de entrada más probable). Y luego, usando la matriz de probabilidades a posteriori, sumo por cada salida la probabilidad de dicha salida multiplicada por la probabilidad de error en esa salida (la probabilidad de equivocarme con el valor de entrada que asumo), esta última es el complemento del elemento a* en dicha columna.
+
+
+- Análisis de los resultados:
+
+a) Como mencioné en la explicación de la resolución, ya que el canal es sin ruido las probabilidades óptimas son las equiprobables.
+
+- Ya que los canales son en serie, las probabilidades de entrada del segundo canal son las de salida del primero.
+
+b), c) y d) 
+- Ya que el primer canal es sin ruido (columnas con un único elemento no nulo) su ruido es 0. El segundo canal es determinante (filas con un único elemento no nulo), por lo tanto su pérdida es 0. En ámbas la información mutua es 1, es decir, en promedio, 1 bit de información de la entrada sobrevive al canal y es correctamente interpretada por la salida.
+
+
+- El primer canal tiene p(E) = 0, esto es lógico ya que no tiene ruido, por cada salida hay una sola entrada posible, no es posible equivocarse en la interpretación de la entrada.
+- El segundo canal, en cambio, sí tiene una probabilidad de error (0.4) no nula, ya que por cada salida tiene 2 probabilidades de entrada, hay lugar a equivocarse en la interpretación de la entrada.
+
+- En el canal compuesto (producto matricial de ámbos primeros canales), es decir el canal reducido, no hay ruido ni pérdida, esto es porque es un canal perfecto, tiene 1 solo elemento de salida posible por cada entrada y 1 sola entrada posible por cada salida.
+
+- Lo mismo pasa con su probabilidad de error, ya que no hay posibles equivocaciones con la interpretación, hay nula probabilidad de error.
+

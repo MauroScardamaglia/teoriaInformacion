@@ -741,17 +741,17 @@ def generarMatrizCompuesta(matrizA,matrizB): # productoMatricial
     # productoMatricial
     r = len(matrizA)
     s = len(matrizB)
+    t = len(matrizB[0])
     
-    matrizC = [ [0] * (s-1) for _ in range(r)]
+    matrizC = [ [0] * (t) for _ in range(r)]
     
     for i in range(r):
-        for j in range(s-1):
+        for j in range(t):
             # elemento actual de la nueva matriz
             aux = 0
             for k in range(s):
-                aux += matrizA[i][k]* matrizB[k][j]
+                aux += matrizA[i][k] * matrizB[k][j]
             matrizC[i][j] = aux
-        
     return matrizC
 
 
