@@ -1,0 +1,1 @@
+52min escribiendo código para que muestre resultados. Corregí un detallito en columnasSonCombinacionLineal

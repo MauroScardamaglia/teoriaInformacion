@@ -758,8 +758,14 @@ def generarMatrizCompuesta(matrizA,matrizB): # productoMatricial
 def columnasSonCombLineal(matrizCanal,j1,j2,usarIsclose=False):
     aux = True
     r = len(matrizCanal)
-    i = 1
-    proporcion = matrizCanal[0][j2] / matrizCanal[0][j1] # factor que multiplica a la primera columna para ser igual a la segunda (el orden es arbitrario)
+    i = 0
+    while (i<r and matrizCanal[i][j1] == 0):
+        i += 1
+    if (i == r):
+        aux = False
+    else:
+        proporcion = matrizCanal[i][j2] / matrizCanal[i][j1] # factor que multiplica a la primera columna para ser igual a la segunda (el orden es arbitrario)
+    i = 0
     while (aux and i<r):
         if (usarIsclose):
             aux = math.isclose(matrizCanal[i][j1] * proporcion,matrizCanal[i][j2])
